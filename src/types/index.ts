@@ -7,7 +7,7 @@ export interface Question {
   answers: string[];
   correctAnswer: number;
   category?: string;
-  difficulty?: 'easy' | 'medium' | 'hard';
+  difficulty?: 'easy' | 'medium' | 'hard' | 'simple' | 'moyen' | 'difficile' | 'tres-difficile' | string;
   explanation?: string;
 }
 

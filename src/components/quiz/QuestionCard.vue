@@ -285,7 +285,14 @@ import BaseCard from "@/components/ui/BaseCard.vue";
 import BaseButton from "@/components/ui/BaseButton.vue";
 import BaseProgressBar from "@/components/ui/BaseProgressBar.vue";
 import AnswerButton from "./AnswerButton.vue";
-import type { Question, Team, UserMode } from "@/types";
+import type { Question } from "@/types";
+
+// Local types for this component
+type UserMode = "host" | "participant" | "default";
+interface Team {
+  id: string;
+  name: string;
+}
 
 interface Props {
   question: Question;
@@ -342,15 +349,23 @@ const isCorrectAnswer = computed(
 );
 
 const difficultyLabel = computed(() => {
-  switch (props.question.difficulty) {
+  const difficulty = props.question.difficulty?.toLowerCase();
+  switch (difficulty) {
     case "easy":
+    case "facile":
+    case "simple":
       return "Facile";
     case "medium":
+    case "moyen":
       return "Moyen";
     case "hard":
+    case "difficile":
       return "Difficile";
+    case "tres-difficile":
+    case "very-hard":
+      return "Très difficile";
     default:
-      return "";
+      return props.question.difficulty || "";
   }
 });
 
@@ -358,15 +373,23 @@ const difficultyClasses = computed(() => {
   const baseClasses =
     "inline-flex items-center px-2 py-1 rounded text-xs font-medium";
 
-  switch (props.question.difficulty) {
+  const difficulty = props.question.difficulty?.toLowerCase();
+  switch (difficulty) {
     case "easy":
+    case "facile":
+    case "simple":
       return `${baseClasses} bg-green-soft text-green-1`;
     case "medium":
+    case "moyen":
       return `${baseClasses} bg-yellow-soft text-yellow-1`;
     case "hard":
+    case "difficile":
+      return `${baseClasses} bg-purple-soft text-purple-1`;
+    case "tres-difficile":
+    case "very-hard":
       return `${baseClasses} bg-red-soft text-red-1`;
     default:
-      return baseClasses;
+      return `${baseClasses} bg-bg-soft text-text-2`;
   }
 });
 
