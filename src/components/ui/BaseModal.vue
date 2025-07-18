@@ -36,7 +36,7 @@
                 {{ title }}
               </h2>
             </slot>
-            
+
             <!-- Close Button -->
             <button
               v-if="closable"
@@ -52,7 +52,11 @@
 
           <!-- Content -->
           <div :class="contentClasses">
-            <div v-if="description" :id="descriptionId" class="body-sm text-text-2 mb-4">
+            <div
+              v-if="description"
+              :id="descriptionId"
+              class="body-sm text-text-2 mb-4"
+            >
               {{ description }}
             </div>
             <slot />
@@ -69,341 +73,418 @@
 </template>
 
 <script setup lang="ts">
-import { ref, computed, watch, nextTick, onMounted, onUnmounted } from 'vue'
-import { useMobileOptimization } from '@/utils/mobileOptimization'
+import { ref, computed, watch, nextTick, onMounted, onUnmounted } from "vue";
+import { useMobileOptimization } from "@/utils/mobileOptimization";
 
 interface Props {
-  isVisible: boolean
-  title?: string
-  description?: string
-  size?: 'sm' | 'md' | 'lg' | 'xl' | 'full'
-  position?: 'center' | 'top' | 'bottom'
-  closable?: boolean
-  closeOnOverlay?: boolean
-  closeOnEscape?: boolean
-  persistent?: boolean
-  maxHeight?: string
-  zIndex?: number
-  backdrop?: 'blur' | 'dark' | 'light'
-  animation?: 'fade' | 'scale' | 'slide-up' | 'slide-down'
-  fullscreenOnMobile?: boolean
-  closeLabel?: string
+  isVisible: boolean;
+  title?: string;
+  description?: string;
+  size?: "sm" | "md" | "lg" | "xl" | "full";
+  position?: "center" | "top" | "bottom";
+  closable?: boolean;
+  closeOnOverlay?: boolean;
+  closeOnEscape?: boolean;
+  persistent?: boolean;
+  maxHeight?: string;
+  zIndex?: number;
+  backdrop?: "blur" | "dark" | "light";
+  animation?: "fade" | "scale" | "slide-up" | "slide-down";
+  fullscreenOnMobile?: boolean;
+  mobileSize?: "full" | "large" | number; // 'large' = 90%, number = custom percentage
+  closeLabel?: string;
 }
 
 const props = withDefaults(defineProps<Props>(), {
-  size: 'md',
-  position: 'center',
+  size: "md",
+  position: "center",
   closable: true,
   closeOnOverlay: true,
   closeOnEscape: true,
   persistent: false,
   zIndex: 1000,
-  backdrop: 'blur',
-  animation: 'scale',
+  backdrop: "blur",
+  animation: "scale",
   fullscreenOnMobile: true,
-  closeLabel: 'Fermer'
-})
+  mobileSize: "full",
+  closeLabel: "Fermer",
+});
 
 const emit = defineEmits<{
-  'update:isVisible': [value: boolean]
-  open: []
-  close: []
-  'before-open': []
-  'after-open': []
-  'before-close': []
-  'after-close': []
-}>()
+  "update:isVisible": [value: boolean];
+  open: [];
+  close: [];
+  "before-open": [];
+  "after-open": [];
+  "before-close": [];
+  "after-close": [];
+}>();
 
 // Mobile optimization
-const { viewport, touch, haptic, accessibility } = useMobileOptimization()
+const { viewport, touch, haptic, accessibility } = useMobileOptimization();
 
 // Refs
-const overlayRef = ref<HTMLElement>()
-const modalRef = ref<HTMLElement>()
-const closeButtonRef = ref<HTMLElement>()
+const overlayRef = ref<HTMLElement>();
+const modalRef = ref<HTMLElement>();
+const closeButtonRef = ref<HTMLElement>();
 
 // State
-const isAnimating = ref(false)
-const previouslyFocusedElement = ref<Element | null>(null)
-const focusableElements = ref<NodeListOf<Element>>()
+const isAnimating = ref(false);
+const previouslyFocusedElement = ref<Element | null>(null);
+const focusableElements = ref<NodeListOf<Element>>();
 
 // IDs for accessibility
-const titleId = computed(() => `modal-title-${Math.random().toString(36).substr(2, 9)}`)
-const descriptionId = computed(() => `modal-desc-${Math.random().toString(36).substr(2, 9)}`)
+const titleId = computed(
+  () => `modal-title-${Math.random().toString(36).substr(2, 9)}`
+);
+const descriptionId = computed(
+  () => `modal-desc-${Math.random().toString(36).substr(2, 9)}`
+);
 
 // Size configurations
 const sizeConfigs = {
-  sm: { maxWidth: 'max-w-md', padding: 'p-4 mobile:p-6' },
-  md: { maxWidth: 'max-w-lg', padding: 'p-6 mobile:p-8' },
-  lg: { maxWidth: 'max-w-2xl', padding: 'p-6 mobile:p-8' },
-  xl: { maxWidth: 'max-w-4xl', padding: 'p-8 mobile:p-10' },
-  full: { maxWidth: 'max-w-none', padding: 'p-6 mobile:p-8' }
-}
+  sm: { maxWidth: "max-w-md", padding: "p-4 mobile:p-6" },
+  md: { maxWidth: "max-w-lg", padding: "p-6 mobile:p-8" },
+  lg: { maxWidth: "max-w-2xl", padding: "p-6 mobile:p-8" },
+  xl: { maxWidth: "max-w-4xl", padding: "p-8 mobile:p-10" },
+  full: { maxWidth: "max-w-none", padding: "p-6 mobile:p-8" },
+};
 
 // Computed Classes
 const overlayClasses = computed(() => {
   const classes = [
     // Position and layout
-    'fixed inset-0 flex items-center justify-center',
-    
+    "fixed inset-0 flex items-center justify-center",
+
     // Z-index using UnoCSS
     `z-${props.zIndex}`,
-    
+
     // Padding for mobile
-    'p-4 mobile:p-6',
-    
+    "p-4 mobile:p-6",
+
     // Backdrop styles
-    props.backdrop === 'blur' ? 'bg-black/60 backdrop-blur-sm' :
-    props.backdrop === 'dark' ? 'bg-black/80' :
-    'bg-black/40',
-    
+    props.backdrop === "blur"
+      ? "bg-black/60 backdrop-blur-sm"
+      : props.backdrop === "dark"
+      ? "bg-black/80"
+      : "bg-black/40",
+
     // Position variants
-    props.position === 'top' ? 'items-start pt-8 mobile:pt-12' :
-    props.position === 'bottom' ? 'items-end pb-8 mobile:pb-12' :
-    'items-center',
-    
+    props.position === "top"
+      ? "items-start pt-8 mobile:pt-12"
+      : props.position === "bottom"
+      ? "items-end pb-8 mobile:pb-12"
+      : "items-center",
+
     // Touch and interaction
-    'touch-manipulation'
-  ]
-  
-  return classes.filter(Boolean).join(' ')
-})
+    "touch-manipulation",
+  ];
+
+  return classes.filter(Boolean).join(" ");
+});
 
 const modalClasses = computed(() => {
-  const config = sizeConfigs[props.size]
-  const isMobile = viewport.isMobile.value
-  
+  const config = sizeConfigs[props.size];
+  const isMobile = viewport.isMobile.value;
+  const hasMobileSize =
+    isMobile && props.fullscreenOnMobile && props.mobileSize !== "full";
+
   const classes = [
     // Base styles
-    'bg-bg rounded-xl shadow-2xl border border-divider',
-    'outline-none relative overflow-hidden',
-    
+    "bg-bg rounded-xl shadow-2xl border border-divider",
+    "outline-none relative overflow-hidden",
+
+    // Flex layout for mobile modal with custom size
+    hasMobileSize ? "flex flex-col" : "",
+
     // Size and responsiveness
-    isMobile && props.fullscreenOnMobile ? 
-      'w-full h-full max-h-none rounded-none m-0' :
-      `w-full ${config.maxWidth}`,
-    
+    isMobile && props.fullscreenOnMobile && props.mobileSize === "full"
+      ? "w-full h-full max-h-none rounded-none m-0"
+      : isMobile &&
+        props.fullscreenOnMobile &&
+        (props.mobileSize === "large" || typeof props.mobileSize === "number")
+      ? "rounded-lg"
+      : `w-full ${config.maxWidth}`,
+
     // Max height - use default classes only, dynamic height will be in style
-    !props.maxHeight ? 'max-h-90vh mobile:max-h-95vh' : '',
-    
+    !props.maxHeight && !(isMobile && props.fullscreenOnMobile)
+      ? "max-h-90vh mobile:max-h-95vh"
+      : "",
+
     // Animation transform origin
-    'transform-gpu',
-    
+    "transform-gpu",
+
     // Mobile optimizations
-    isMobile ? 'mx-2' : 'mx-4',
-    
+    isMobile && props.mobileSize !== "full"
+      ? "mx-2"
+      : isMobile
+      ? "mx-2"
+      : "mx-4",
+
     // Accessibility
-    'focus:outline-none focus:ring-2 focus:ring-brand-1 focus:ring-offset-2'
+    "focus:outline-none focus:ring-2 focus:ring-brand-1 focus:ring-offset-2",
+  ];
+
+  return classes.filter(Boolean).join(" ");
+});
+
+const headerClasses = computed(() => {
+  const isMobile = viewport.isMobile.value;
+  const hasMobileSize =
+    isMobile && props.fullscreenOnMobile && props.mobileSize !== "full";
+
+  return [
+    "flex-between border-b border-divider",
+    sizeConfigs[props.size].padding.replace("p-", "p-").replace("mobile:", "") +
+      " pb-4",
+    hasMobileSize ? "flex-shrink-0" : "sticky top-0",
+    "bg-bg z-10",
   ]
-  
-  return classes.filter(Boolean).join(' ')
-})
+    .filter(Boolean)
+    .join(" ");
+});
 
-const headerClasses = computed(() => [
-  'flex-between border-b border-divider',
-  sizeConfigs[props.size].padding.replace('p-', 'p-').replace('mobile:', '') + ' pb-4',
-  'sticky top-0 bg-bg z-10'
-].join(' '))
+const contentClasses = computed(() => {
+  const isMobile = viewport.isMobile.value;
+  const hasMobileSize =
+    isMobile && props.fullscreenOnMobile && props.mobileSize !== "full";
 
-const contentClasses = computed(() => [
-  'overflow-y-auto flex-1',
-  sizeConfigs[props.size].padding,
-  'scrollbar-thin scrollbar-thumb-divider scrollbar-track-transparent'
-].join(' '))
+  return [
+    "overflow-y-auto flex-1",
+    sizeConfigs[props.size].padding,
+    "scrollbar-thin scrollbar-thumb-divider scrollbar-track-transparent",
+    // Ensure content can scroll properly in mobile modal
+    hasMobileSize ? "max-h-full" : "",
+  ]
+    .filter(Boolean)
+    .join(" ");
+});
 
-const footerClasses = computed(() => [
-  'border-t border-divider bg-bg-soft/50',
-  sizeConfigs[props.size].padding.replace('p-', 'p-').replace('mobile:', '') + ' pt-4',
-  'sticky bottom-0'
-].join(' '))
+const footerClasses = computed(() => {
+  const isMobile = viewport.isMobile.value;
+  const hasMobileSize =
+    isMobile && props.fullscreenOnMobile && props.mobileSize !== "full";
 
-const closeButtonClasses = computed(() => [
-  'w-8 h-8 rounded-full flex-center',
-  'hover:bg-bg-soft active:bg-divider',
-  'text-text-2 hover:text-text-1',
-  'transition-all duration-200',
-  'focus:outline-none focus:ring-2 focus:ring-brand-1 focus:ring-offset-2',
-  'min-w-44px min-h-44px' // Touch-friendly
-].join(' '))
+  return [
+    "border-t border-divider bg-bg-soft/50",
+    sizeConfigs[props.size].padding.replace("p-", "p-").replace("mobile:", "") +
+      " pt-4",
+    hasMobileSize ? "flex-shrink-0" : "sticky bottom-0",
+  ]
+    .filter(Boolean)
+    .join(" ");
+});
+
+const closeButtonClasses = computed(() =>
+  [
+    "w-8 h-8 rounded-full flex-center",
+    "hover:bg-bg-soft active:bg-divider",
+    "text-text-2 hover:text-text-1",
+    "transition-all duration-200",
+    "focus:outline-none focus:ring-2 focus:ring-brand-1 focus:ring-offset-2",
+    "min-w-44px min-h-44px", // Touch-friendly
+  ].join(" ")
+);
 
 // Computed Styles
 const overlayStyles = computed(() => {
   return {
-    zIndex: props.zIndex
-  }
-})
+    zIndex: props.zIndex,
+  };
+});
 
 const modalStyles = computed(() => {
-  const isMobile = viewport.isMobile.value
-  const styles: Record<string, string> = {}
-  
+  const isMobile = viewport.isMobile.value;
+  const styles: Record<string, string> = {};
+
   if (isMobile && props.fullscreenOnMobile) {
-    styles.width = '100vw'
-    styles.height = '100vh'
-    styles.maxHeight = 'none'
-    styles.borderRadius = '0'
+    if (props.mobileSize === "full") {
+      styles.width = "100vw";
+      styles.height = "100vh";
+      styles.maxHeight = "none";
+      styles.borderRadius = "0";
+    } else if (props.mobileSize === "large") {
+      styles.width = "90vw";
+      styles.height = "90vh";
+      styles.maxHeight = "90vh";
+    } else if (typeof props.mobileSize === "number") {
+      const size = Math.min(Math.max(props.mobileSize, 50), 100); // Clamp between 50% and 100%
+      styles.width = `${size}vw`;
+      styles.height = `${size}vh`;
+      styles.maxHeight = `${size}vh`;
+    }
   } else if (props.maxHeight) {
     // Apply custom max-height via inline styles
-    styles.maxHeight = props.maxHeight
+    styles.maxHeight = props.maxHeight;
   }
-  
-  return styles
-})
+
+  return styles;
+});
 
 // Methods
 const handleOverlayClick = () => {
   if (props.closeOnOverlay && !props.persistent) {
-    handleClose()
+    handleClose();
   }
-}
+};
 
 const handleClose = () => {
-  if (props.persistent || isAnimating.value) return
-  
-  haptic.lightTap()
-  emit('update:isVisible', false)
-  emit('close')
-}
+  if (props.persistent || isAnimating.value) return;
+
+  haptic.lightTap();
+  emit("update:isVisible", false);
+  emit("close");
+};
 
 const handleKeyDown = (event: KeyboardEvent) => {
-  if (event.key === 'Escape' && props.closeOnEscape && !props.persistent) {
-    handleClose()
-    return
+  if (event.key === "Escape" && props.closeOnEscape && !props.persistent) {
+    handleClose();
+    return;
   }
-  
+
   // Focus management
-  if (event.key === 'Tab') {
-    handleTabKey(event)
+  if (event.key === "Tab") {
+    handleTabKey(event);
   }
-}
+};
 
 const handleTabKey = (event: KeyboardEvent) => {
-  if (!focusableElements.value) return
-  
-  const elements = Array.from(focusableElements.value)
-  const firstElement = elements[0] as HTMLElement
-  const lastElement = elements[elements.length - 1] as HTMLElement
-  
+  if (!focusableElements.value) return;
+
+  const elements = Array.from(focusableElements.value);
+  const firstElement = elements[0] as HTMLElement;
+  const lastElement = elements[elements.length - 1] as HTMLElement;
+
   if (event.shiftKey) {
     // Shift + Tab
     if (document.activeElement === firstElement) {
-      event.preventDefault()
-      lastElement.focus()
+      event.preventDefault();
+      lastElement.focus();
     }
   } else {
     // Tab
     if (document.activeElement === lastElement) {
-      event.preventDefault()
-      firstElement.focus()
+      event.preventDefault();
+      firstElement.focus();
     }
   }
-}
+};
 
 const handleTouchStart = (event: TouchEvent) => {
-  touch.handleTouchStart(event)
-}
+  touch.handleTouchStart(event);
+};
 
 const handleTouchEnd = (event: TouchEvent) => {
   touch.handleTouchEnd(event, () => {
-    if (event.target === overlayRef.value && props.closeOnOverlay && !props.persistent) {
-      handleClose()
+    if (
+      event.target === overlayRef.value &&
+      props.closeOnOverlay &&
+      !props.persistent
+    ) {
+      handleClose();
     }
-  })
-}
+  });
+};
 
 const setupFocusTrap = async () => {
-  await nextTick()
-  
-  if (!modalRef.value) return
-  
+  await nextTick();
+
+  if (!modalRef.value) return;
+
   // Store previously focused element
-  previouslyFocusedElement.value = document.activeElement
-  
+  previouslyFocusedElement.value = document.activeElement;
+
   // Get focusable elements
   focusableElements.value = modalRef.value.querySelectorAll(
     'button, [href], input, select, textarea, [tabindex]:not([tabindex="-1"])'
-  )
-  
+  );
+
   // Focus first element or close button
   if (focusableElements.value.length > 0) {
-    (focusableElements.value[0] as HTMLElement).focus()
+    (focusableElements.value[0] as HTMLElement).focus();
   } else if (closeButtonRef.value) {
-    closeButtonRef.value.focus()
+    closeButtonRef.value.focus();
   } else if (modalRef.value) {
-    modalRef.value.focus()
+    modalRef.value.focus();
   }
-}
+};
 
 const restoreFocus = () => {
-  if (previouslyFocusedElement.value && 'focus' in previouslyFocusedElement.value) {
-    (previouslyFocusedElement.value as HTMLElement).focus()
+  if (
+    previouslyFocusedElement.value &&
+    "focus" in previouslyFocusedElement.value
+  ) {
+    (previouslyFocusedElement.value as HTMLElement).focus();
   }
-}
+};
 
 const lockBodyScroll = () => {
   if (viewport.isMobile.value) {
-    document.body.style.overflow = 'hidden'
-    document.body.style.position = 'fixed'
-    document.body.style.width = '100%'
+    document.body.style.overflow = "hidden";
+    document.body.style.position = "fixed";
+    document.body.style.width = "100%";
   }
-}
+};
 
 const unlockBodyScroll = () => {
-  document.body.style.overflow = ''
-  document.body.style.position = ''
-  document.body.style.width = ''
-}
+  document.body.style.overflow = "";
+  document.body.style.position = "";
+  document.body.style.width = "";
+};
 
 // Animation handlers
 const onBeforeEnter = () => {
-  isAnimating.value = true
-  emit('before-open')
-  lockBodyScroll()
-}
+  isAnimating.value = true;
+  emit("before-open");
+  lockBodyScroll();
+};
 
 const onAfterEnter = () => {
-  isAnimating.value = false
-  emit('after-open')
-  setupFocusTrap()
-  
+  isAnimating.value = false;
+  emit("after-open");
+  setupFocusTrap();
+
   // Announce to screen readers
   accessibility.announceToScreenReader(
-    props.title ? `Modal ouvert: ${props.title}` : 'Modal ouvert'
-  )
-}
+    props.title ? `Modal ouvert: ${props.title}` : "Modal ouvert"
+  );
+};
 
 const onBeforeLeave = () => {
-  isAnimating.value = true
-  emit('before-close')
-}
+  isAnimating.value = true;
+  emit("before-close");
+};
 
 const onAfterLeave = () => {
-  isAnimating.value = false
-  emit('after-close')
-  unlockBodyScroll()
-  restoreFocus()
-}
+  isAnimating.value = false;
+  emit("after-close");
+  unlockBodyScroll();
+  restoreFocus();
+};
 
 // Watchers
-watch(() => props.isVisible, (newValue) => {
-  if (newValue) {
-    emit('open')
+watch(
+  () => props.isVisible,
+  (newValue) => {
+    if (newValue) {
+      emit("open");
+    }
   }
-})
+);
 
 // Lifecycle
 onMounted(() => {
   // Prevent background scroll on mobile when modal is open
   if (props.isVisible) {
-    lockBodyScroll()
-    setupFocusTrap()
+    lockBodyScroll();
+    setupFocusTrap();
   }
-})
+});
 
 onUnmounted(() => {
-  unlockBodyScroll()
-  restoreFocus()
-})
+  unlockBodyScroll();
+  restoreFocus();
+});
 </script>
 
 <style scoped>
@@ -445,7 +526,7 @@ onUnmounted(() => {
   .modal-leave-active {
     transition: opacity 0.2s ease;
   }
-  
+
   .modal-enter-from .modal-container,
   .modal-leave-to .modal-container {
     transform: none;
@@ -469,4 +550,4 @@ onUnmounted(() => {
 .scrollbar-thin::-webkit-scrollbar-thumb:hover {
   background: var(--vp-c-border);
 }
-</style> 
+</style>

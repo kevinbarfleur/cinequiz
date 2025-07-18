@@ -130,7 +130,7 @@ export default defineConfig({
   },
   shortcuts: {
     // Boutons harmonisés - Primary et Secondary avec transitions fluides
-    'btn-base': 'font-semibold whitespace-nowrap transition-all duration-300 ease inline-flex items-center justify-center cursor-pointer border-1 text-center select-none motion-reduce:transition-none',
+    'btn-base': 'font-semibold transition-all duration-300 ease inline-flex items-center justify-center cursor-pointer border-1 text-center select-none motion-reduce:transition-none',
     
     // Primary button - Uses rainbow animation for colors, no static background
     'btn-primary': 'btn-base text-white border-transparent hover:brightness-110 active:brightness-90 focus:ring-2 focus:ring-white/30 focus:ring-offset-2 shadow-sm hover:shadow-md',
@@ -182,6 +182,14 @@ export default defineConfig({
     'card': 'bg-bg-soft rounded-lg shadow-md p-4 border border-divider',
     'card-hover': 'card hover:shadow-lg hover:border-brand-1 transition-all duration-200',
     'card-responsive': 'card p-responsive',
+    
+    // Button Groups - Simple Overflow Prevention
+    'btn-group': 'flex flex-wrap gap-2 sm:gap-3',
+    'btn-group-end': 'btn-group justify-end',
+    'btn-group-center': 'btn-group justify-center',
+    
+    // Simple Modal Button - Always full width, no overflow
+    'btn-modal': 'w-full max-w-full',
     
     // Typography avec nouvelles couleurs
     'text-heading': 'text-text-1 font-semibold',

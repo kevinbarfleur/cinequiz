@@ -100,15 +100,16 @@
       title="Quitter le quiz"
       @confirm="confirmQuit"
     >
-      <p class="text-muted mb-4">
-        Êtes-vous sûr de vouloir quitter le quiz ? Votre progression sera
-        sauvegardée.
-      </p>
-      <div class="flex gap-3 justify-end">
-        <BaseButton variant="outline" @click="showQuitDialog = false">
+      <p class="text-muted mb-4">Êtes-vous sûr de vouloir quitter le quiz ?</p>
+      <div class="btn-group-end">
+        <BaseButton
+          variant="outline"
+          class="btn-modal"
+          @click="showQuitDialog = false"
+        >
           Annuler
         </BaseButton>
-        <BaseButton variant="secondary" @click="confirmQuit">
+        <BaseButton variant="secondary" class="btn-modal" @click="confirmQuit">
           Quitter
         </BaseButton>
       </div>
@@ -124,11 +125,15 @@
         Êtes-vous sûr de vouloir recommencer le quiz ? Toutes vos réponses
         actuelles seront perdues.
       </p>
-      <div class="flex gap-3 justify-end">
-        <BaseButton variant="outline" @click="showRestartDialog = false">
+      <div class="btn-group-end">
+        <BaseButton
+          variant="outline"
+          class="btn-modal"
+          @click="showRestartDialog = false"
+        >
           Annuler
         </BaseButton>
-        <BaseButton variant="primary" @click="confirmRestart">
+        <BaseButton variant="primary" class="btn-modal" @click="confirmRestart">
           Recommencer
         </BaseButton>
       </div>

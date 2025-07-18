@@ -154,6 +154,7 @@
       :close-on-escape="true"
       backdrop="blur"
       animation="scale"
+      mobile-size="large"
     >
       <template #default>
         <div class="space-responsive">
@@ -164,10 +165,15 @@
 
           <!-- ChatGPT Generation Button -->
           <div class="text-center my-4">
-            <BaseButton variant="secondary" size="md" @click="openChatGPT">
+            <BaseButton
+              variant="secondary"
+              size="md"
+              class="btn-modal"
+              @click="openChatGPT"
+            >
               <span class="flex items-center gap-2">
                 <div class="i-carbon-chat text-lg"></div>
-                Générer des questions avec ChatGPT
+                <span>Générer des questions avec ChatGPT</span>
               </span>
             </BaseButton>
           </div>
@@ -202,7 +208,7 @@
                 variant="primary"
                 size="md"
                 @click="showInstructions = false"
-                class="w-full mt-4"
+                class="btn-modal mt-4"
               >
                 Commencer
               </BaseButton>
