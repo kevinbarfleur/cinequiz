@@ -82,7 +82,7 @@
       </div>
 
       <!-- Quiz Footer -->
-      <div
+      <!-- <div
         class="fixed bottom-0 left-0 right-0 z-10 bg-bg border-t border-divider shadow-lg"
       >
         <div class="container-app py-3">
@@ -115,10 +115,10 @@
           </div>
         </div>
       </div>
-    </div>
+    </div> -->
 
     <!-- Quiz Completed - Redirect to Results -->
-    <div v-else class="min-h-screen flex-center p-4">
+    <!-- <div v-else class="min-h-screen flex-center p-4">
       <div class="text-center">
         <div class="text-4xl mb-4">🎉</div>
         <h2 class="heading-2 mb-4">Quiz terminé !</h2>
@@ -127,7 +127,7 @@
           class="w-8 h-8 border-4 border-brand-1/20 border-t-brand-1 rounded-full animate-spin mx-auto"
         ></div>
       </div>
-    </div>
+    </div> -->
 
     <!-- Quit Confirmation Dialog -->
     <BaseModal
