@@ -544,11 +544,72 @@ watch(showManualImport, (newValue) => {
   }
 });
 
+const loadQuizFromUrl = () => {
+  const urlParams = new URLSearchParams(window.location.search);
+  const encodedQuiz = urlParams.get("quiz");
+
+  if (encodedQuiz) {
+    try {
+      // Decode the quiz data
+      const decodedData = JSON.parse(decodeURIComponent(atob(encodedQuiz)));
+
+      // Validate quiz data structure
+      if (
+        decodedData.questions &&
+        Array.isArray(decodedData.questions) &&
+        decodedData.questions.length > 0
+      ) {
+        // Validate each question has required fields
+        const isValid = decodedData.questions.every(
+          (q: any) =>
+            q.id &&
+            q.question &&
+            q.answers &&
+            Array.isArray(q.answers) &&
+            q.answers.length > 0 &&
+            typeof q.correctAnswer === "number" &&
+            q.correctAnswer >= 0 &&
+            q.correctAnswer < q.answers.length
+        );
+
+        if (isValid) {
+          // Load the shared quiz
+          quizStore.loadQuestions(decodedData.questions);
+
+          // Clear the URL parameter to clean up the URL
+          const url = new URL(window.location.href);
+          url.searchParams.delete("quiz");
+          window.history.replaceState({}, document.title, url.toString());
+
+          // Redirect to quiz
+          router.push("/quiz");
+
+          return true; // Quiz loaded from URL
+        }
+      }
+    } catch (error) {
+      console.error("Erreur lors du chargement du quiz partagé:", error);
+
+      // Clear invalid parameter
+      const url = new URL(window.location.href);
+      url.searchParams.delete("quiz");
+      window.history.replaceState({}, document.title, url.toString());
+    }
+  }
+
+  return false; // No quiz in URL
+};
+
 onMounted(() => {
-  // Trigger animations after component mount
-  setTimeout(() => {
-    isLoaded.value = true;
-  }, 100);
+  // Check for shared quiz in URL first
+  const quizLoadedFromUrl = loadQuizFromUrl();
+
+  // If no shared quiz, trigger normal animations
+  if (!quizLoadedFromUrl) {
+    setTimeout(() => {
+      isLoaded.value = true;
+    }, 100);
+  }
 });
 </script>
 

@@ -61,7 +61,7 @@
       </div>
 
       <!-- Question Card -->
-      <div class="container-app px-4 py-8">
+      <div class="container-app px-4 py-8 pb-20">
         <QuestionCard
           v-if="quizStore.currentQuestion"
           :key="quizStore.currentQuestion.id"
@@ -79,6 +79,41 @@
           @next="handleNext"
           @previous="handlePrevious"
         />
+      </div>
+
+      <!-- Quiz Footer -->
+      <div
+        class="fixed bottom-0 left-0 right-0 z-10 bg-bg border-t border-divider shadow-lg"
+      >
+        <div class="container-app py-3">
+          <div class="flex justify-center">
+            <BaseButton
+              variant="outline"
+              size="sm"
+              @click="shareQuiz"
+              :disabled="isSharing"
+              class="flex items-center gap-2"
+              :class="{
+                'text-green-1 border-green-1': shareSuccess,
+                'cursor-wait': isSharing,
+              }"
+            >
+              <div
+                v-if="isSharing"
+                class="i-carbon-circle-dash animate-spin text-sm"
+              ></div>
+              <div
+                v-else-if="shareSuccess"
+                class="i-carbon-checkmark text-sm"
+              ></div>
+              <div v-else class="i-carbon-share text-sm"></div>
+
+              <span v-if="isSharing">Partage...</span>
+              <span v-else-if="shareSuccess">Lien copié !</span>
+              <span v-else>Partager ce quiz</span>
+            </BaseButton>
+          </div>
+        </div>
       </div>
     </div>
 
@@ -156,6 +191,8 @@ const quizStore = useQuizStore();
 // Component state
 const showQuitDialog = ref(false);
 const showRestartDialog = ref(false);
+const isSharing = ref(false);
+const shareSuccess = ref(false);
 
 // Methods
 const handleAnswer = (answerIndex: number) => {
@@ -195,6 +232,118 @@ const confirmRestart = () => {
   showRestartDialog.value = false;
 };
 
+const shareQuiz = async () => {
+  if (isSharing.value) return;
+
+  isSharing.value = true;
+  shareSuccess.value = false;
+
+  try {
+    // Get current quiz data
+    const quizData = {
+      questions: quizStore.state.questions,
+      metadata: {
+        title: "Quiz Cinéma Partagé",
+        description: "Quiz généré et partagé via CinéQuiz",
+        totalQuestions: quizStore.state.questions.length,
+        createdAt: new Date().toISOString(),
+      },
+    };
+
+    // Encode quiz data as base64 URL parameter
+    const encodedQuiz = btoa(encodeURIComponent(JSON.stringify(quizData)));
+    const shareUrl = `https://cinequizapp.netlify.app/?quiz=${encodedQuiz}`;
+
+    // Try to use Web Share API if available, otherwise copy to clipboard
+    if (navigator.share) {
+      await navigator.share({
+        title: "Quiz Cinéma - CinéQuiz",
+        text: `Découvrez ce quiz cinéma de ${quizData.questions.length} questions !`,
+        url: shareUrl,
+      });
+      shareSuccess.value = true;
+    } else if (navigator.clipboard) {
+      await navigator.clipboard.writeText(shareUrl);
+      shareSuccess.value = true;
+
+      // Show success feedback
+      setTimeout(() => {
+        shareSuccess.value = false;
+      }, 2000);
+    } else {
+      // Fallback: show the URL in a prompt
+      const userCopied = prompt(
+        "Copiez ce lien pour partager le quiz:",
+        shareUrl
+      );
+      if (userCopied !== null) {
+        shareSuccess.value = true;
+        setTimeout(() => {
+          shareSuccess.value = false;
+        }, 2000);
+      }
+    }
+  } catch (error) {
+    console.error("Erreur lors du partage:", error);
+    // Don't show alert, just log the error
+  } finally {
+    isSharing.value = false;
+  }
+};
+
+const loadQuizFromUrl = () => {
+  const urlParams = new URLSearchParams(window.location.search);
+  const encodedQuiz = urlParams.get("quiz");
+
+  if (encodedQuiz) {
+    try {
+      // Decode the quiz data
+      const decodedData = JSON.parse(decodeURIComponent(atob(encodedQuiz)));
+
+      // Validate quiz data structure
+      if (
+        decodedData.questions &&
+        Array.isArray(decodedData.questions) &&
+        decodedData.questions.length > 0
+      ) {
+        // Validate each question has required fields
+        const isValid = decodedData.questions.every(
+          (q: any) =>
+            q.id &&
+            q.question &&
+            q.answers &&
+            Array.isArray(q.answers) &&
+            q.answers.length > 0 &&
+            typeof q.correctAnswer === "number" &&
+            q.correctAnswer >= 0 &&
+            q.correctAnswer < q.answers.length
+        );
+
+        if (isValid) {
+          // Load the shared quiz
+          quizStore.loadQuestions(decodedData.questions);
+
+          // Clear the URL parameter to clean up the URL
+          const url = new URL(window.location.href);
+          url.searchParams.delete("quiz");
+          window.history.replaceState({}, document.title, url.toString());
+
+          return true; // Quiz loaded from URL
+        }
+      }
+    } catch (error) {
+      console.error("Erreur lors du chargement du quiz partagé:", error);
+
+      // Clear invalid parameter
+      const url = new URL(window.location.href);
+      url.searchParams.delete("quiz");
+      window.history.replaceState({}, document.title, url.toString());
+    }
+  }
+
+  return false; // No quiz in URL
+};
+
 // Watch for quiz completion and redirect
 watch(
   () => quizStore.state.isCompleted,
@@ -207,7 +356,11 @@ watch(
 
 // Load questions if not already loaded
 onMounted(async () => {
-  if (quizStore.state.questions.length === 0) {
+  // First, try to load quiz from URL parameter (shared quiz)
+  const quizLoadedFromUrl = loadQuizFromUrl();
+
+  // If no quiz was loaded from URL and no questions in store, load default quiz
+  if (!quizLoadedFromUrl && quizStore.state.questions.length === 0) {
     await quizStore.loadQuestionsFromJSON();
   }
 });
