@@ -1,0 +1,3 @@
+# SPA fallback - redirect all non-file requests to home page
+# This ensures that users always start from home when accessing the app directly
+/*    /index.html   200 

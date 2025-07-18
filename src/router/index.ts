@@ -44,6 +44,13 @@ router.beforeEach(async (to: RouteLocationNormalized, from: RouteLocationNormali
   // Set page title
   document.title = to.meta.title as string || 'Quiz Cinéma'
   
+  // Redirect to home on direct access/reload of quiz or results pages
+  // This ensures users always start from home page
+  if ((to.name === 'quiz' || to.name === 'results') && !from.name) {
+    next('/')
+    return
+  }
+  
   // Load questions if not already loaded and navigating to quiz
   if (to.name === 'quiz' && quizStore.state.questions.length === 0) {
     try {
