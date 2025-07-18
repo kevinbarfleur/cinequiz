@@ -1,0 +1,164 @@
+{
+  "metadata": {
+    "title": "Quiz Cinéma Romance",
+    "version": "1.0",
+    "totalQuestions": 12,
+    "category": "romance",
+    "description": "Un quiz spécialisé dans les films romantiques et les histoires d'amour au cinéma."
+  },
+  "questions": [
+    {
+      "id": "r001",
+      "question": "Dans quel film Julia Roberts dit-elle 'Big mistake. Big. Huge!' ?",
+      "answers": [
+        "Pretty Woman",
+        "Notting Hill",
+        "My Best Friend's Wedding",
+        "Erin Brockovich"
+      ],
+      "correctAnswer": 0,
+      "category": "Romance",
+      "difficulty": "medium",
+      "explanation": "Cette réplique culte est prononcée dans Pretty Woman lors de la scène du shopping sur Rodeo Drive."
+    },
+    {
+      "id": "r002",
+      "question": "Qui sont les acteurs principaux dans 'Titanic' ?",
+      "answers": [
+        "Brad Pitt et Angelina Jolie",
+        "Leonardo DiCaprio et Kate Winslet",
+        "Ryan Gosling et Emma Stone",
+        "Hugh Grant et Julia Roberts"
+      ],
+      "correctAnswer": 1,
+      "category": "Romance",
+      "difficulty": "easy",
+      "explanation": "Leonardo DiCaprio (Jack) et Kate Winslet (Rose) forment le couple mythique de Titanic."
+    },
+    {
+      "id": "r003",
+      "question": "Dans 'Dirty Dancing', quelle est la réplique culte de Patrick Swayze ?",
+      "answers": [
+        "I'll be back",
+        "Nobody puts Baby in a corner",
+        "You had me at hello",
+        "I'm flying, Jack!"
+      ],
+      "correctAnswer": 1,
+      "category": "Romance",
+      "difficulty": "easy",
+      "explanation": "Cette réplique iconique est prononcée par Johnny Castle (Patrick Swayze) dans Dirty Dancing."
+    },
+    {
+      "id": "r004",
+      "question": "Quel film raconte l'histoire de Noah et Allie ?",
+      "answers": [
+        "The Notebook",
+        "A Walk to Remember",
+        "Dear John",
+        "The Last Song"
+      ],
+      "correctAnswer": 0,
+      "category": "Romance",
+      "difficulty": "medium",
+      "explanation": "The Notebook (N'oublie jamais) raconte l'histoire d'amour entre Noah et Allie, adaptée du roman de Nicholas Sparks."
+    },
+    {
+      "id": "r005",
+      "question": "Dans 'Ghost', quel objet permet la communication entre Sam et Molly ?",
+      "answers": [
+        "Un miroir",
+        "Une planche de Ouija",
+        "Une médium",
+        "Un tour de poterie"
+      ],
+      "correctAnswer": 2,
+      "category": "Romance",
+      "difficulty": "medium",
+      "explanation": "Oda Mae Brown, la médium jouée par Whoopi Goldberg, permet à Sam de communiquer avec Molly."
+    },
+    {
+      "id": "r006",
+      "question": "Qui a réalisé 'Casablanca' ?",
+      "answers": [
+        "Billy Wilder",
+        "Michael Curtiz",
+        "Frank Capra",
+        "George Stevens"
+      ],
+      "correctAnswer": 1,
+      "category": "Romance",
+      "difficulty": "hard",
+      "explanation": "Michael Curtiz a réalisé ce classique romantique en 1942 avec Humphrey Bogart et Ingrid Bergman."
+    },
+    {
+      "id": "r007",
+      "question": "Dans 'When Harry Met Sally', que commande Sally au restaurant ?",
+      "answers": [
+        "Une salade Caesar",
+        "Un sandwich club",
+        "Une tarte aux pommes",
+        "Une salade accompagnée d'exigences précises"
+      ],
+      "correctAnswer": 3,
+      "category": "Romance",
+      "difficulty": "medium",
+      "explanation": "Sally est connue pour ses commandes très précises au restaurant, avec de nombreuses modifications."
+    },
+    {
+      "id": "r008",
+      "question": "Quel acteur joue Mr. Darcy dans 'Pride and Prejudice' (2005) ?",
+      "answers": ["Hugh Grant", "Colin Firth", "Matthew Macfadyen", "Jude Law"],
+      "correctAnswer": 2,
+      "category": "Romance",
+      "difficulty": "medium",
+      "explanation": "Matthew Macfadyen joue Mr. Darcy dans l'adaptation de 2005 réalisée par Joe Wright."
+    },
+    {
+      "id": "r009",
+      "question": "Dans 'La La Land', quel instrument joue Ryan Gosling ?",
+      "answers": ["Le saxphone", "La guitare", "Le piano", "La batterie"],
+      "correctAnswer": 2,
+      "category": "Romance",
+      "difficulty": "easy",
+      "explanation": "Sebastian (Ryan Gosling) est pianiste de jazz et rêve d'ouvrir son propre club."
+    },
+    {
+      "id": "r010",
+      "question": "Quel film met en scène Hugh Grant en tant que Premier ministre britannique ?",
+      "answers": [
+        "Four Weddings and a Funeral",
+        "Notting Hill",
+        "Love Actually",
+        "Bridget Jones's Diary"
+      ],
+      "correctAnswer": 2,
+      "category": "Romance",
+      "difficulty": "medium",
+      "explanation": "Dans Love Actually, Hugh Grant joue David, le Premier ministre britannique qui tombe amoureux de Natalie."
+    },
+    {
+      "id": "r011",
+      "question": "Dans 'The Princess Bride', comment s'appelle le personnage de Robin Wright ?",
+      "answers": ["Buttercup", "Belle", "Princess", "Bride"],
+      "correctAnswer": 0,
+      "category": "Romance",
+      "difficulty": "medium",
+      "explanation": "Buttercup est la princesse bien-aimée de Westley dans ce conte de fées romantique."
+    },
+    {
+      "id": "r012",
+      "question": "Quel film romantique se déroule principalement dans une librairie ?",
+      "answers": [
+        "You've Got Mail",
+        "Sleepless in Seattle",
+        "Serendipity",
+        "Kate & Leopold"
+      ],
+      "correctAnswer": 0,
+      "category": "Romance",
+      "difficulty": "medium",
+      "explanation": "You've Got Mail met en scène Kathleen Kelly qui possède une petite librairie indépendante."
+    }
+  ]
+}

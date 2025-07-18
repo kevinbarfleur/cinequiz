@@ -1,0 +1,159 @@
+{
+  "metadata": {
+    "title": "Quiz Cinéma Historique",
+    "version": "1.0",
+    "totalQuestions": 12,
+    "category": "historique",
+    "description": "Un quiz spécialisé dans les films historiques, biopics et reconstitutions d'époque."
+  },
+  "questions": [
+    {
+      "id": "h001",
+      "question": "Dans quel film Mel Gibson joue-t-il William Wallace ?",
+      "answers": ["Gladiator", "Braveheart", "The Patriot", "Troy"],
+      "correctAnswer": 1,
+      "category": "Historique",
+      "difficulty": "easy",
+      "explanation": "Mel Gibson incarne William Wallace, héros de l'indépendance écossaise, dans Braveheart (1995)."
+    },
+    {
+      "id": "h002",
+      "question": "Quel film retrace l'histoire du naufrage du Titanic en 1912 ?",
+      "answers": [
+        "A Night to Remember",
+        "Titanic",
+        "The Poseidon Adventure",
+        "Les deux"
+      ],
+      "correctAnswer": 3,
+      "category": "Historique",
+      "difficulty": "medium",
+      "explanation": "A Night to Remember (1958) et Titanic (1997) retracent tous deux le naufrage du célèbre paquebot."
+    },
+    {
+      "id": "h003",
+      "question": "Dans 'Amadeus', qui joue le compositeur Antonio Salieri ?",
+      "answers": [
+        "F. Murray Abraham",
+        "Tom Hulce",
+        "Jeffrey Jones",
+        "Simon Callow"
+      ],
+      "correctAnswer": 0,
+      "category": "Historique",
+      "difficulty": "medium",
+      "explanation": "F. Murray Abraham a remporté l'Oscar du meilleur acteur pour son rôle de Salieri dans Amadeus."
+    },
+    {
+      "id": "h004",
+      "question": "Quel film de Steven Spielberg se déroule pendant la Seconde Guerre mondiale et suit un soldat américain ?",
+      "answers": [
+        "Saving Private Ryan",
+        "Schindler's List",
+        "Empire of the Sun",
+        "Munich"
+      ],
+      "correctAnswer": 0,
+      "category": "Historique",
+      "difficulty": "easy",
+      "explanation": "Saving Private Ryan (Il faut sauver le soldat Ryan) suit la mission de sauvetage du soldat James Francis Ryan."
+    },
+    {
+      "id": "h005",
+      "question": "Dans 'Elizabeth', qui joue la reine Elizabeth Ier ?",
+      "answers": [
+        "Helen Mirren",
+        "Cate Blanchett",
+        "Judi Dench",
+        "Meryl Streep"
+      ],
+      "correctAnswer": 1,
+      "category": "Historique",
+      "difficulty": "medium",
+      "explanation": "Cate Blanchett incarne Elizabeth Ier dans le film de Shekhar Kapur (1998) et sa suite."
+    },
+    {
+      "id": "h006",
+      "question": "Quel film raconte l'histoire de Gandhi ?",
+      "answers": [
+        "Gandhi",
+        "The Last Emperor",
+        "Lawrence of Arabia",
+        "A Passage to India"
+      ],
+      "correctAnswer": 0,
+      "category": "Historique",
+      "difficulty": "easy",
+      "explanation": "Gandhi (1982) de Richard Attenborough retrace la vie du leader indien, avec Ben Kingsley dans le rôle-titre."
+    },
+    {
+      "id": "h007",
+      "question": "Dans 'Gladiator', comment s'appelle le personnage principal joué par Russell Crowe ?",
+      "answers": ["Spartacus", "Maximus", "Marcus", "Quintus"],
+      "correctAnswer": 1,
+      "category": "Historique",
+      "difficulty": "easy",
+      "explanation": "Maximus Decimus Meridius est le général romain devenu gladiateur dans le film de Ridley Scott."
+    },
+    {
+      "id": "h008",
+      "question": "Quel film de 2019 retrace la Première Guerre mondiale en temps réel ?",
+      "answers": [
+        "They Shall Not Grow Old",
+        "1917",
+        "Dunkirk",
+        "Hacksaw Ridge"
+      ],
+      "correctAnswer": 1,
+      "category": "Historique",
+      "difficulty": "medium",
+      "explanation": "1917 de Sam Mendes suit deux soldats britanniques pendant la Première Guerre mondiale en temps réel apparent."
+    },
+    {
+      "id": "h009",
+      "question": "Dans 'Marie Antoinette' de Sofia Coppola, qui joue la reine de France ?",
+      "answers": [
+        "Scarlett Johansson",
+        "Kirsten Dunst",
+        "Reese Witherspoon",
+        "Anne Hathaway"
+      ],
+      "correctAnswer": 1,
+      "category": "Historique",
+      "difficulty": "medium",
+      "explanation": "Kirsten Dunst incarne Marie Antoinette dans cette biographie stylisée de 2006."
+    },
+    {
+      "id": "h010",
+      "question": "Quel film retrace l'histoire de la bataille de Stalingrad ?",
+      "answers": [
+        "Enemy at the Gates",
+        "Stalingrad",
+        "Come and See",
+        "The Pianist"
+      ],
+      "correctAnswer": 0,
+      "category": "Historique",
+      "difficulty": "medium",
+      "explanation": "Enemy at the Gates (Stalingrad) de Jean-Jacques Annaud retrace cette bataille cruciale de la Seconde Guerre mondiale."
+    },
+    {
+      "id": "h011",
+      "question": "Dans 'The Last Samurai', quelle culture Tom Cruise découvre-t-il ?",
+      "answers": ["Chinoise", "Japonaise", "Coréenne", "Thaïlandaise"],
+      "correctAnswer": 1,
+      "category": "Historique",
+      "difficulty": "easy",
+      "explanation": "Tom Cruise découvre la culture et les traditions des samouraïs japonais dans ce film de 2003."
+    },
+    {
+      "id": "h012",
+      "question": "Quel film de Martin Scorsese retrace la vie du gangster Henry Hill ?",
+      "answers": ["Casino", "Goodfellas", "The Departed", "Gangs of New York"],
+      "correctAnswer": 1,
+      "category": "Historique",
+      "difficulty": "medium",
+      "explanation": "Goodfellas (Les Affranchis) retrace la carrière criminelle d'Henry Hill dans la mafia new-yorkaise."
+    }
+  ]
+}

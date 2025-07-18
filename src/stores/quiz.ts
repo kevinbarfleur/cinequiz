@@ -3,8 +3,44 @@ import { ref, computed, reactive } from 'vue'
 import type { Question, QuizData, QuizStats, PersistedQuizData, UserPreferences } from '@/types'
 import { LocalStorageManager } from '@/utils/localStorage'
 
-// Import du fichier JSON des questions
-import quizData from '@/data/quiz-questions.json'
+// Import des différents quiz par catégorie
+import quizGeneral from '@/data/quiz-general.json'
+import quizRomance from '@/data/quiz-romance.json'
+import quizHistorique from '@/data/quiz-historique.json'
+import quizAction from '@/data/quiz-action.json'
+
+// Types pour les catégories de quiz
+export type QuizCategory = 'general' | 'romance' | 'historique' | 'action'
+
+export interface QuizCategoryInfo {
+  id: QuizCategory
+  title: string
+  icon: string
+}
+
+// Configuration des catégories disponibles
+export const QUIZ_CATEGORIES: QuizCategoryInfo[] = [
+  {
+    id: 'general',
+    title: 'Général',
+    icon: '🎬'
+  },
+  {
+    id: 'romance',
+    title: 'Romance',
+    icon: '💕'
+  },
+  {
+    id: 'historique',
+    title: 'Historique',
+    icon: '🏛️'
+  },
+  {
+    id: 'action',
+    title: 'Action',
+    icon: '💥'
+  }
+]
 
 export interface QuizState {
   questions: Question[]
@@ -108,8 +144,20 @@ export const useQuizStore = defineStore('quiz', () => {
   )
   const isLocalStorageAvailable = computed(() => LocalStorageManager.isAvailable())
 
+  // Fonction utilitaire pour obtenir les données d'une catégorie
+  function getQuizDataByCategory(category: QuizCategory): QuizData {
+    const quizDataMap = {
+      general: quizGeneral,
+      romance: quizRomance,
+      historique: quizHistorique,
+      action: quizAction
+    }
+    
+    return quizDataMap[category] as QuizData
+  }
+
   // Actions
-  async function loadQuestionsFromJSON(): Promise<void> {
+  async function loadQuestionsFromJSON(category: QuizCategory = 'general'): Promise<void> {
     try {
       state.isLoading = true
       state.error = undefined
@@ -117,7 +165,7 @@ export const useQuizStore = defineStore('quiz', () => {
       // Simulation d'un délai de chargement pour une meilleure UX
       await new Promise(resolve => setTimeout(resolve, 500))
       
-      const data = quizData as QuizData
+      const data = getQuizDataByCategory(category)
       
       if (!data.questions || !Array.isArray(data.questions)) {
         throw new Error('Format de données invalide: questions manquantes')

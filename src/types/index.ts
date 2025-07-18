@@ -18,7 +18,7 @@ export interface QuizMetadata {
   title: string;
   version: string;
   totalQuestions: number;
-  categories: string[];
+  category: string;
   description?: string;
 }
 

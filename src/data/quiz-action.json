@@ -1,0 +1,159 @@
+{
+  "metadata": {
+    "title": "Quiz Cinéma Action",
+    "version": "1.0",
+    "totalQuestions": 12,
+    "category": "action",
+    "description": "Un quiz spécialisé dans les films d'action, super-héros, thrillers et aventures."
+  },
+  "questions": [
+    {
+      "id": "a001",
+      "question": "Dans 'Die Hard', dans quel bâtiment John McClane est-il piégé ?",
+      "answers": [
+        "Empire State Building",
+        "Nakatomi Plaza",
+        "Willis Tower",
+        "One World Trade Center"
+      ],
+      "correctAnswer": 1,
+      "category": "Action",
+      "difficulty": "medium",
+      "explanation": "John McClane (Bruce Willis) combat les terroristes dans le Nakatomi Plaza à Los Angeles."
+    },
+    {
+      "id": "a002",
+      "question": "Qui joue Ethan Hunt dans la saga 'Mission: Impossible' ?",
+      "answers": ["Tom Cruise", "Matt Damon", "Brad Pitt", "George Clooney"],
+      "correctAnswer": 0,
+      "category": "Action",
+      "difficulty": "easy",
+      "explanation": "Tom Cruise incarne Ethan Hunt depuis le premier Mission: Impossible en 1996."
+    },
+    {
+      "id": "a003",
+      "question": "Dans 'Terminator', quelle phrase culte Arnold Schwarzenegger prononce-t-il ?",
+      "answers": [
+        "Hasta la vista, baby",
+        "I'll be back",
+        "Come with me if you want to live",
+        "Get to the chopper"
+      ],
+      "correctAnswer": 1,
+      "category": "Action",
+      "difficulty": "easy",
+      "explanation": "I'll be back est la réplique iconique du Terminator dans le premier film de 1984."
+    },
+    {
+      "id": "a004",
+      "question": "Quel acteur joue John Wick ?",
+      "answers": ["Jason Statham", "Keanu Reeves", "Liam Neeson", "Vin Diesel"],
+      "correctAnswer": 1,
+      "category": "Action",
+      "difficulty": "easy",
+      "explanation": "Keanu Reeves incarne le légendaire assassin John Wick dans cette saga d'action."
+    },
+    {
+      "id": "a005",
+      "question": "Dans 'Mad Max: Fury Road', qui joue Furiosa ?",
+      "answers": [
+        "Charlize Theron",
+        "Scarlett Johansson",
+        "Gal Gadot",
+        "Margot Robbie"
+      ],
+      "correctAnswer": 0,
+      "category": "Action",
+      "difficulty": "medium",
+      "explanation": "Charlize Theron incarne l'Imperator Furiosa dans ce chef-d'œuvre d'action de George Miller."
+    },
+    {
+      "id": "a006",
+      "question": "Quel est le vrai nom de Iron Man dans l'univers Marvel ?",
+      "answers": ["Tony Stark", "Steve Rogers", "Bruce Banner", "Peter Parker"],
+      "correctAnswer": 0,
+      "category": "Action",
+      "difficulty": "easy",
+      "explanation": "Tony Stark est le génie milliardaire qui devient Iron Man, interprété par Robert Downey Jr."
+    },
+    {
+      "id": "a007",
+      "question": "Dans 'The Fast and the Furious', comment s'appelle le personnage de Vin Diesel ?",
+      "answers": [
+        "Brian O'Conner",
+        "Roman Pearce",
+        "Dominic Toretto",
+        "Tej Parker"
+      ],
+      "correctAnswer": 2,
+      "category": "Action",
+      "difficulty": "medium",
+      "explanation": "Dominic 'Dom' Toretto est le leader de l'équipe dans la saga Fast & Furious."
+    },
+    {
+      "id": "a008",
+      "question": "Qui a réalisé 'The Matrix' ?",
+      "answers": [
+        "Les frères Wachowski",
+        "James Cameron",
+        "Ridley Scott",
+        "Christopher Nolan"
+      ],
+      "correctAnswer": 0,
+      "category": "Action",
+      "difficulty": "medium",
+      "explanation": "Lana et Lilly Wachowski (alors les frères Wachowski) ont réalisé The Matrix en 1999."
+    },
+    {
+      "id": "a009",
+      "question": "Dans 'Casino Royale', qui incarne James Bond pour la première fois ?",
+      "answers": [
+        "Pierce Brosnan",
+        "Daniel Craig",
+        "Sean Connery",
+        "Roger Moore"
+      ],
+      "correctAnswer": 1,
+      "category": "Action",
+      "difficulty": "medium",
+      "explanation": "Daniel Craig a fait ses débuts en tant que James Bond dans Casino Royale (2006)."
+    },
+    {
+      "id": "a010",
+      "question": "Dans 'Kill Bill', quel est le nom de code de l'héroïne ?",
+      "answers": ["Black Mamba", "Copperhead", "The Bride", "Beatrix Kiddo"],
+      "correctAnswer": 0,
+      "category": "Action",
+      "difficulty": "medium",
+      "explanation": "Black Mamba est le nom de code de Beatrix Kiddo (Uma Thurman) dans Kill Bill."
+    },
+    {
+      "id": "a011",
+      "question": "Quel film d'action se déroule entièrement dans un bus qui ne peut pas ralentir ?",
+      "answers": [
+        "Speed",
+        "Unstoppable",
+        "The Taking of Pelham 123",
+        "Con Air"
+      ],
+      "correctAnswer": 0,
+      "category": "Action",
+      "difficulty": "medium",
+      "explanation": "Speed (1994) avec Keanu Reeves et Sandra Bullock se déroule dans un bus piégé."
+    },
+    {
+      "id": "a012",
+      "question": "Dans 'Aliens', qui joue le lieutenant Ellen Ripley ?",
+      "answers": [
+        "Linda Hamilton",
+        "Sigourney Weaver",
+        "Jamie Lee Curtis",
+        "Glenn Close"
+      ],
+      "correctAnswer": 1,
+      "category": "Action",
+      "difficulty": "medium",
+      "explanation": "Sigourney Weaver incarne Ellen Ripley dans la saga Alien, devenant une icône du cinéma d'action."
+    }
+  ]
+}

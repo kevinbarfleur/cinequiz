@@ -71,24 +71,27 @@
             </div>
           </BaseCard>
 
-          <!-- Default Quiz Button -->
+          <!-- Category Selector -->
           <div class="text-center">
-            <p class="body-sm text-text-2 mb-4">
-              Ou utilisez le quiz par défaut :
-            </p>
-            <BaseButton
-              variant="primary"
-              size="lg"
-              class="min-w-48"
-              :class="{ 'animate-card-in': isLoaded }"
-              :style="{ animationDelay: '0.4s' }"
-              @click="startDefaultQuiz"
-            >
-              <span class="flex items-center justify-center gap-2">
-                <span>Commencer le Quiz</span>
-                <div class="i-carbon-play text-lg"></div>
-              </span>
-            </BaseButton>
+            <p class="body-sm text-text-2 mb-6">Choisissez votre catégorie :</p>
+
+            <div class="max-w-xs mx-auto">
+              <div class="grid grid-cols-2 gap-3">
+                <button
+                  v-for="category in quizCategories"
+                  :key="category.id"
+                  class="category-btn p-3 border-2 border-divider bg-bg-soft rounded-lg transition-all duration-200 text-center hover:border-brand-1 hover:bg-brand-1/10 hover:shadow-md hover:-translate-y-1 min-h-20"
+                  :class="{ 'animate-card-in': isLoaded }"
+                  :style="{ animationDelay: '0.4s' }"
+                  @click="startQuiz(category.id)"
+                >
+                  <div class="text-lg mb-1">{{ category.icon }}</div>
+                  <div class="body-md font-bold text-white">
+                    {{ category.title }}
+                  </div>
+                </button>
+              </div>
+            </div>
           </div>
         </div>
 
@@ -296,7 +299,11 @@
 <script setup lang="ts">
 import { ref, computed, onMounted, watch } from "vue";
 import { useRouter } from "vue-router";
-import { useQuizStore } from "@/stores/quiz";
+import {
+  useQuizStore,
+  QUIZ_CATEGORIES,
+  type QuizCategory,
+} from "@/stores/quiz";
 import BaseButton from "@/components/ui/BaseButton.vue";
 import BaseCard from "@/components/ui/BaseCard.vue";
 import BaseModal from "@/components/ui/BaseModal.vue";
@@ -310,6 +317,9 @@ const isImporting = ref(false);
 const importMessage = ref("");
 const importSuccess = ref(false);
 const manualJsonInput = ref("");
+
+// Quiz categories
+const quizCategories = QUIZ_CATEGORIES;
 
 // ChatGPT URL with pre-filled prompt
 const chatGptUrl = computed(() => {
@@ -341,12 +351,12 @@ const chatGptUrl = computed(() => {
   )}`;
 });
 
-const startDefaultQuiz = async () => {
+const startQuiz = async (category: QuizCategory) => {
   try {
-    await quizStore.loadQuestionsFromJSON();
+    await quizStore.loadQuestionsFromJSON(category);
     router.push("/quiz");
   } catch (error) {
-    importMessage.value = "Erreur lors du chargement du quiz par défaut";
+    importMessage.value = "Erreur lors du chargement du quiz";
     importSuccess.value = false;
     setTimeout(() => {
       importMessage.value = "";

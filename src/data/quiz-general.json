@@ -1,0 +1,154 @@
+{
+  "metadata": {
+    "title": "Quiz Cinéma Général",
+    "version": "1.0",
+    "totalQuestions": 12,
+    "category": "general",
+    "description": "Un quiz général sur le cinéma avec des questions variées sur tous les genres et toutes les époques."
+  },
+  "questions": [
+    {
+      "id": "g001",
+      "question": "Qui a réalisé le film 'Pulp Fiction' ?",
+      "answers": [
+        "Quentin Tarantino",
+        "Martin Scorsese",
+        "Steven Spielberg",
+        "Christopher Nolan"
+      ],
+      "correctAnswer": 0,
+      "category": "Réalisateurs",
+      "difficulty": "medium",
+      "explanation": "Quentin Tarantino a réalisé Pulp Fiction en 1994, l'un de ses films les plus emblématiques."
+    },
+    {
+      "id": "g002",
+      "question": "Dans quel film Tom Hanks dit-il 'La vie, c'est comme une boîte de chocolats' ?",
+      "answers": ["Philadelphia", "Forrest Gump", "Cast Away", "Big"],
+      "correctAnswer": 1,
+      "category": "Répliques",
+      "difficulty": "easy",
+      "explanation": "Cette réplique culte est prononcée par Forrest Gump dans le film éponyme de 1994."
+    },
+    {
+      "id": "g003",
+      "question": "Quel film a remporté l'Oscar du meilleur film en 2020 ?",
+      "answers": ["1917", "Once Upon a Time in Hollywood", "Parasite", "Joker"],
+      "correctAnswer": 2,
+      "category": "Oscars",
+      "difficulty": "medium",
+      "explanation": "Parasite de Bong Joon-ho a remporté l'Oscar du meilleur film en 2020, première victoire pour un film coréen."
+    },
+    {
+      "id": "g004",
+      "question": "Qui joue le rôle principal dans 'The Matrix' ?",
+      "answers": [
+        "Brad Pitt",
+        "Leonardo DiCaprio",
+        "Keanu Reeves",
+        "Will Smith"
+      ],
+      "correctAnswer": 2,
+      "category": "Acteurs",
+      "difficulty": "easy",
+      "explanation": "Keanu Reeves joue Neo dans The Matrix (1999) des frères Wachowski."
+    },
+    {
+      "id": "g005",
+      "question": "Quel est le film le plus rentable de tous les temps (sans ajustement inflation) ?",
+      "answers": [
+        "Avatar",
+        "Avengers: Endgame",
+        "Titanic",
+        "Star Wars: Le Réveil de la Force"
+      ],
+      "correctAnswer": 1,
+      "category": "Box-office",
+      "difficulty": "hard",
+      "explanation": "Avengers: Endgame a rapporté plus de 2,79 milliards de dollars dans le monde."
+    },
+    {
+      "id": "g006",
+      "question": "Dans 'Le Parrain', comment s'appelle la famille mafieuse principale ?",
+      "answers": ["Corleone", "Soprano", "Gambino", "Lucchese"],
+      "correctAnswer": 0,
+      "category": "Drame",
+      "difficulty": "medium",
+      "explanation": "La famille Corleone est au centre de la trilogie du Parrain de Francis Ford Coppola."
+    },
+    {
+      "id": "g007",
+      "question": "Quel acteur a joué Batman dans 'The Dark Knight' ?",
+      "answers": [
+        "Michael Keaton",
+        "Val Kilmer",
+        "George Clooney",
+        "Christian Bale"
+      ],
+      "correctAnswer": 3,
+      "category": "Super-héros",
+      "difficulty": "easy",
+      "explanation": "Christian Bale a incarné Batman dans la trilogie Dark Knight de Christopher Nolan."
+    },
+    {
+      "id": "g008",
+      "question": "Qui a composé la musique de 'Star Wars' ?",
+      "answers": [
+        "Hans Zimmer",
+        "John Williams",
+        "Danny Elfman",
+        "Howard Shore"
+      ],
+      "correctAnswer": 1,
+      "category": "Musique",
+      "difficulty": "medium",
+      "explanation": "John Williams a composé les bandes originales iconiques de toute la saga Star Wars."
+    },
+    {
+      "id": "g009",
+      "question": "Dans quel film Meryl Streep joue-t-elle Margaret Thatcher ?",
+      "answers": ["Doubt", "The Iron Lady", "Sophie's Choice", "Julie & Julia"],
+      "correctAnswer": 1,
+      "category": "Biopic",
+      "difficulty": "medium",
+      "explanation": "Meryl Streep a remporté l'Oscar de la meilleure actrice pour son rôle de Margaret Thatcher dans The Iron Lady."
+    },
+    {
+      "id": "g010",
+      "question": "Quel est le premier film Pixar ?",
+      "answers": [
+        "Toy Story",
+        "1001 Pattes",
+        "Monstres et Cie",
+        "Le Monde de Nemo"
+      ],
+      "correctAnswer": 0,
+      "category": "Animation",
+      "difficulty": "medium",
+      "explanation": "Toy Story (1995) est le premier long-métrage d'animation entièrement réalisé en images de synthèse."
+    },
+    {
+      "id": "g011",
+      "question": "Dans 'Inception', combien de niveaux de rêves sont explorés ?",
+      "answers": ["3", "4", "5", "6"],
+      "correctAnswer": 1,
+      "category": "Science-fiction",
+      "difficulty": "hard",
+      "explanation": "Inception explore 4 niveaux de rêves : la réalité, le rêve de niveau 1, 2 et 3, plus les limbes."
+    },
+    {
+      "id": "g012",
+      "question": "Qui a réalisé '2001, l'Odyssée de l'espace' ?",
+      "answers": [
+        "Ridley Scott",
+        "Stanley Kubrick",
+        "George Lucas",
+        "Steven Spielberg"
+      ],
+      "correctAnswer": 1,
+      "category": "Réalisateurs",
+      "difficulty": "medium",
+      "explanation": "Stanley Kubrick a réalisé ce chef-d'œuvre de science-fiction en 1968."
+    }
+  ]
+}
