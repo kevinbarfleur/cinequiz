@@ -217,11 +217,84 @@
         </div>
       </template>
     </BaseModal>
+
+    <!-- Manual JSON Import Modal -->
+    <BaseModal
+      v-model:isVisible="showManualImport"
+      title="Importer des questions JSON"
+      size="lg"
+      :close-on-overlay="true"
+      :close-on-escape="true"
+      backdrop="blur"
+      animation="scale"
+      mobile-size="large"
+    >
+      <template #default>
+        <div class="space-responsive">
+          <div class="custom-block-info">
+            <strong>Import manuel :</strong> Collez votre fichier JSON de
+            questions dans la zone ci-dessous.
+          </div>
+
+          <div class="mt-4">
+            <label class="block text-sm font-medium text-text-1 mb-2">
+              Contenu JSON
+            </label>
+            <textarea
+              v-model="manualJsonInput"
+              class="w-full h-64 p-3 border border-divider rounded-lg bg-bg text-text-1 resize-none focus:ring-2 focus:ring-brand-1 focus:border-brand-1 transition-colors"
+              placeholder="Collez votre JSON ici..."
+              :disabled="isImporting"
+            ></textarea>
+          </div>
+
+          <!-- Success/Error Messages -->
+          <div
+            v-if="importMessage"
+            class="text-sm mt-4 p-3 rounded-lg"
+            :class="{
+              'text-green-1 bg-green-soft': importSuccess,
+              'text-red-1 bg-red-soft': !importSuccess,
+            }"
+          >
+            {{ importMessage }}
+          </div>
+
+          <div class="btn-group-end mt-6">
+            <BaseButton
+              variant="outline"
+              size="md"
+              class="btn-modal"
+              @click="showManualImport = false"
+              :disabled="isImporting"
+            >
+              Annuler
+            </BaseButton>
+            <BaseButton
+              variant="primary"
+              size="md"
+              class="btn-modal"
+              @click="importFromTextArea"
+              :disabled="isImporting || !manualJsonInput.trim()"
+            >
+              <span v-if="!isImporting" class="flex items-center gap-2">
+                <div class="i-carbon-document-import text-lg"></div>
+                Importer
+              </span>
+              <span v-else class="flex items-center gap-2">
+                <div class="i-carbon-circle-dash animate-spin text-lg"></div>
+                Importation...
+              </span>
+            </BaseButton>
+          </div>
+        </div>
+      </template>
+    </BaseModal>
   </div>
 </template>
 
 <script setup lang="ts">
-import { ref, computed, onMounted } from "vue";
+import { ref, computed, onMounted, watch } from "vue";
 import { useRouter } from "vue-router";
 import { useQuizStore } from "@/stores/quiz";
 import BaseButton from "@/components/ui/BaseButton.vue";
@@ -232,9 +305,11 @@ const router = useRouter();
 const quizStore = useQuizStore();
 const isLoaded = ref(false);
 const showInstructions = ref(false);
+const showManualImport = ref(false);
 const isImporting = ref(false);
 const importMessage = ref("");
 const importSuccess = ref(false);
+const manualJsonInput = ref("");
 
 // ChatGPT URL with pre-filled prompt
 const chatGptUrl = computed(() => {
@@ -285,8 +360,106 @@ const openChatGPT = () => {
 
 const importFromClipboard = async () => {
   if (!navigator.clipboard) {
-    importMessage.value =
-      "Le presse-papiers n'est pas supporté par votre navigateur";
+    // Fallback to manual import when clipboard is not supported
+    showManualImport.value = true;
+    return;
+  }
+
+  isImporting.value = true;
+  importMessage.value = "";
+
+  try {
+    const clipboardText = await navigator.clipboard.readText();
+
+    if (!clipboardText.trim()) {
+      // Fallback to manual import when clipboard is empty
+      isImporting.value = false;
+      showManualImport.value = true;
+      return;
+    }
+
+    // Parse and validate JSON
+    let jsonData;
+    try {
+      jsonData = JSON.parse(clipboardText);
+    } catch (error) {
+      // Fallback to manual import when JSON is invalid
+      isImporting.value = false;
+      manualJsonInput.value = clipboardText; // Pre-fill the textarea with clipboard content
+      showManualImport.value = true;
+      return;
+    }
+
+    // Validate structure
+    if (!jsonData.questions || !Array.isArray(jsonData.questions)) {
+      isImporting.value = false;
+      manualJsonInput.value = clipboardText;
+      showManualImport.value = true;
+      return;
+    }
+
+    if (jsonData.questions.length === 0) {
+      isImporting.value = false;
+      manualJsonInput.value = clipboardText;
+      showManualImport.value = true;
+      return;
+    }
+
+    // Validate each question
+    for (let i = 0; i < jsonData.questions.length; i++) {
+      const q = jsonData.questions[i];
+      if (
+        !q.id ||
+        !q.question ||
+        !q.answers ||
+        typeof q.correctAnswer !== "number"
+      ) {
+        isImporting.value = false;
+        manualJsonInput.value = clipboardText;
+        showManualImport.value = true;
+        return;
+      }
+
+      if (!Array.isArray(q.answers) || q.answers.length === 0) {
+        isImporting.value = false;
+        manualJsonInput.value = clipboardText;
+        showManualImport.value = true;
+        return;
+      }
+
+      if (q.correctAnswer < 0 || q.correctAnswer >= q.answers.length) {
+        isImporting.value = false;
+        manualJsonInput.value = clipboardText;
+        showManualImport.value = true;
+        return;
+      }
+    }
+
+    // Load questions into store
+    quizStore.loadQuestions(jsonData.questions);
+
+    importMessage.value = `${jsonData.questions.length} question(s) importée(s) avec succès !`;
+    importSuccess.value = true;
+
+    // Auto-redirect to quiz after successful import
+    setTimeout(() => {
+      router.push("/quiz");
+    }, 1500);
+  } catch (error) {
+    // Fallback to manual import on any other error (permissions, etc.)
+    isImporting.value = false;
+    showManualImport.value = true;
+  } finally {
+    if (importSuccess.value) {
+      isImporting.value = false;
+    }
+    // Don't reset isImporting here if we're opening manual import modal
+  }
+};
+
+const importFromTextArea = async () => {
+  if (!manualJsonInput.value.trim()) {
+    importMessage.value = "Veuillez coller un JSON valide.";
     importSuccess.value = false;
     setTimeout(() => {
       importMessage.value = "";
@@ -298,19 +471,7 @@ const importFromClipboard = async () => {
   importMessage.value = "";
 
   try {
-    const clipboardText = await navigator.clipboard.readText();
-
-    if (!clipboardText.trim()) {
-      throw new Error("Le presse-papiers est vide");
-    }
-
-    // Parse and validate JSON
-    let jsonData;
-    try {
-      jsonData = JSON.parse(clipboardText);
-    } catch (error) {
-      throw new Error("Format JSON invalide");
-    }
+    const jsonData = JSON.parse(manualJsonInput.value);
 
     // Validate structure
     if (!jsonData.questions || !Array.isArray(jsonData.questions)) {
@@ -368,6 +529,20 @@ const importFromClipboard = async () => {
     }
   }
 };
+
+const resetManualImportModal = () => {
+  manualJsonInput.value = "";
+  importMessage.value = "";
+  importSuccess.value = false;
+  isImporting.value = false;
+};
+
+// Watch for manual import modal close to reset state
+watch(showManualImport, (newValue) => {
+  if (!newValue) {
+    resetManualImportModal();
+  }
+});
 
 onMounted(() => {
   // Trigger animations after component mount
