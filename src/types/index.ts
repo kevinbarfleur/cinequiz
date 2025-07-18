@@ -31,60 +31,17 @@ export interface QuizData {
 }
 
 /**
- * Interface pour une équipe
- */
-export interface Team {
-  id: string;
-  name: string;
-  score: number;
-  color?: string;
-}
-
-/**
- * Interface pour lier une équipe à une réponse
- */
-export interface TeamAnswer {
-  questionId: string;
-  teamId: string;
-  answerIndex: number;
-  isCorrect: boolean;
-}
-
-/**
- * Interface pour les résultats détaillés d'une question
- */
-export interface QuestionResults {
-  questionId: string;
-  correctAnswer: number;
-  teamAnswers: {
-    teamId: string;
-    teamName: string;
-    answerIndex: number;
-    isCorrect: boolean;
-  }[];
-}
-
-/**
  * Interface pour l'état du quiz dans l'application
  */
 export interface QuizState {
   questions: Question[];
-  teams: Team[];
   currentQuestionIndex: number;
-  userMode: 'host' | 'participant';
-  teamAnswers: TeamAnswer[];
+  participantAnswers: number[];
   isCompleted: boolean;
   startTime: Date;
   endTime?: Date;
   isLoading: boolean;
   error?: string;
-  // Pour le mode participant
-  participantAnswers: number[];
-  // Pour le mode animateur
-  currentQuestionTeamAssignments: Map<number, string[]>; // answerIndex -> teamIds
-  // Anciens champs pour compatibilité
-  score: number;
-  answers: number[];
 }
 
 /**
@@ -143,20 +100,6 @@ export type DifficultyLevel = 'easy' | 'medium' | 'hard';
 export type QuestionCategory = 'Romance' | 'Comédie' | 'Drame' | 'Acteurs' | 'Réalisateurs';
 
 /**
- * Type pour les modes utilisateur
- */
-export type UserMode = 'host' | 'participant';
-
-/**
- * Interface pour les données d'équipe persistées
- */
-export interface PersistedTeamData {
-  teams: Team[];
-  lastUsedTeams: Team[];
-  teamColors: string[];
-}
-
-/**
  * Interface pour les données persistées dans localStorage
  */
 export interface PersistedQuizData {
@@ -166,17 +109,6 @@ export interface PersistedQuizData {
   averageScore: number;
   bestTime: number; // en secondes
   preferences: UserPreferences;
-  // Données d'équipes
-  teamData?: PersistedTeamData;
-  // Sessions d'équipes
-  lastTeamSession?: {
-    teams: Team[];
-    teamAnswers: TeamAnswer[];
-    currentQuestionIndex: number;
-    userMode: UserMode;
-    sessionId: string;
-    timestamp: string;
-  };
 }
 
 /**

@@ -1,107 +1,158 @@
 <template>
-  <div class="min-h-screen relative overflow-hidden bg-gradient-to-br from-bg to-bg-soft">
+  <div
+    class="min-h-screen relative overflow-hidden bg-gradient-to-br from-bg to-bg-soft"
+  >
     <!-- Hero Section -->
-    <div class="container-app min-h-screen flex-center flex-col text-center relative z-10">
+    <div
+      class="container-app min-h-screen flex-center flex-col text-center relative z-10"
+    >
       <div class="container-xl">
         <!-- Main Title -->
-        <h1 class="heading-1 rainbow-text mb-4 main-title" :class="{ 'animate-slide-up': isLoaded }">
+        <h1
+          class="heading-1 rainbow-text mb-4 main-title"
+          :class="{ 'animate-slide-up': isLoaded }"
+        >
           CinéQUIZ
         </h1>
-        
+
         <!-- Subtitle -->
-        <p class="body-text text-text-2 mb-8 mobile:mb-12 leading-relaxed subtitle" :class="{ 'animate-slide-up-delay': isLoaded }">
+        <p
+          class="body-text text-text-2 mb-8 mobile:mb-12 leading-relaxed subtitle"
+          :class="{ 'animate-slide-up-delay': isLoaded }"
+        >
           Testez vos connaissances cinéma !
         </p>
-        
-        <!-- Mode Selection Section -->
-        <div class="mb-8 mobile:mb-12 mode-selection" :class="{ 'animate-fade-in': isLoaded }">
-        
-          <div class="grid-responsive grid-cols-1 tablet:grid-cols-2 mb-8">
-            <!-- Mode Animateur -->
-            <BaseCard 
-              variant="elevated" 
-              hover
-              padding="none"
-              :class="{ 'animate-card-in': isLoaded }"
-              :style="{ animationDelay: '0.3s' }"
-              class="mode-card border-2 border-transparent relative overflow-hidden hover:border-brand-1/30 hover:shadow-lg hover:-translate-y-2 transition-all duration-300"
-            >
-              <div class="p-responsive text-center h-full flex flex-col justify-between">
-                <div class="text-4xl mobile:text-5xl mb-4 text-brand-1">
-                  <div class="i-carbon-user-admin"></div>
-                </div>
-                <h3 class="heading-3 mb-4">Mode Animateur</h3>
-                <p class="body-sm mb-6">
-                  Gérez les équipes, contrôlez le déroulement du quiz et accédez aux résultats détaillés
-                </p>
-                <BaseButton 
-                  variant="primary" 
-                  size="lg"
-                  class="w-full"
-                  @click="selectMode('host')"
-                >
-                  <span class="flex items-center justify-center gap-2">
-                    <span>Animer le Quiz</span>
-                    <div class="i-carbon-user text-lg"></div>
-                  </span>
-                </BaseButton>
-              </div>
-            </BaseCard>
 
-            <!-- Mode Participant -->
-            <BaseCard 
-              variant="elevated" 
-              hover
-              padding="none"
+        <!-- Quiz Actions Section -->
+        <div
+          class="mb-8 mobile:mb-12 quiz-actions"
+          :class="{ 'animate-fade-in': isLoaded }"
+        >
+          <!-- Import Questions Card -->
+          <BaseCard
+            variant="elevated"
+            hover
+            padding="none"
+            :class="{ 'animate-card-in': isLoaded }"
+            :style="{ animationDelay: '0.3s' }"
+            class="import-card border-2 border-transparent relative overflow-hidden hover:border-brand-1/30 hover:shadow-lg hover:-translate-y-2 transition-all duration-300 max-w-md mx-auto mb-6"
+          >
+            <div
+              class="p-responsive text-center h-full flex flex-col justify-between"
+            >
+              <div class="text-4xl mobile:text-5xl mb-4 text-brand-1">
+                <div class="i-carbon-document-import"></div>
+              </div>
+              <h3 class="heading-3 mb-4">Importer des Questions</h3>
+              <p class="body-sm mb-6">
+                Collez un fichier JSON de questions depuis votre presse-papiers
+                pour créer un quiz personnalisé
+              </p>
+              <BaseButton
+                variant="secondary"
+                size="lg"
+                class="w-full mb-4"
+                @click="importFromClipboard"
+                :disabled="isImporting"
+              >
+                <span class="flex items-center justify-center gap-2">
+                  <span v-if="!isImporting"
+                    >Importer depuis le Presse-papiers</span
+                  >
+                  <span v-else>Importation en cours...</span>
+                  <div v-if="!isImporting" class="i-carbon-paste text-lg"></div>
+                  <div
+                    v-else
+                    class="i-carbon-circle-dash text-lg animate-spin"
+                  ></div>
+                </span>
+              </BaseButton>
+
+              <!-- Success/Error Messages -->
+              <div
+                v-if="importMessage"
+                class="text-sm"
+                :class="{
+                  'text-green-1': importSuccess,
+                  'text-red-1': !importSuccess,
+                }"
+              >
+                {{ importMessage }}
+              </div>
+            </div>
+          </BaseCard>
+
+          <!-- Default Quiz Button -->
+          <div class="text-center">
+            <p class="body-sm text-text-2 mb-4">
+              Ou utilisez le quiz par défaut :
+            </p>
+            <BaseButton
+              variant="primary"
+              size="lg"
+              class="min-w-48"
               :class="{ 'animate-card-in': isLoaded }"
               :style="{ animationDelay: '0.4s' }"
-              class="mode-card border-2 border-transparent relative overflow-hidden hover:border-brand-1/30 hover:shadow-lg hover:-translate-y-2 transition-all duration-300"
+              @click="startDefaultQuiz"
             >
-              <div class="p-responsive text-center h-full flex flex-col justify-between">
-                <div class="text-4xl mobile:text-5xl mb-4 text-brand-1">
-                  <div class="i-carbon-user"></div>
-                </div>
-                <h3 class="heading-3 mb-4">Mode Participant</h3>
-                <p class="body-sm mb-6">
-                  Répondez aux questions à votre rythme avec une navigation libre entre les questions
-                </p>
-                <BaseButton 
-                  variant="primary" 
-                  size="lg"
-                  class="w-full"
-                  @click="selectMode('participant')"
-                >
-                  <span class="flex items-center justify-center gap-2">
-                    <span>Jouer au Quiz</span>
-                    <div class="i-carbon-game-console text-lg"></div>
-                  </span>
-                </BaseButton>
-              </div>
-            </BaseCard>
+              <span class="flex items-center justify-center gap-2">
+                <span>Commencer le Quiz</span>
+                <div class="i-carbon-play text-lg"></div>
+              </span>
+            </BaseButton>
           </div>
         </div>
 
-
+        <!-- Instructions Button -->
+        <div
+          class="text-center"
+          :class="{ 'animate-fade-in': isLoaded }"
+          :style="{ animationDelay: '0.6s' }"
+        >
+          <BaseButton
+            variant="ghost"
+            size="md"
+            @click="showInstructions = true"
+          >
+            <span class="flex items-center gap-2">
+              <div class="i-carbon-help text-lg"></div>
+              Comment jouer ?
+            </span>
+          </BaseButton>
+        </div>
       </div>
     </div>
-    
-
 
     <!-- Background Glow Effects -->
     <div class="absolute inset-0 pointer-events-none z-1 overflow-hidden">
       <!-- Primary Glow - Top Left -->
-      <div class="glow-decoration absolute top-10% -left-10%" style="animation-delay: 0s">
-        <div class="glow-sphere w-80 h-80 mobile:w-96 mobile:h-96 tablet:w-120 tablet:h-120"></div>
+      <div
+        class="glow-decoration absolute top-10% -left-10%"
+        style="animation-delay: 0s"
+      >
+        <div
+          class="glow-sphere w-80 h-80 mobile:w-96 mobile:h-96 tablet:w-120 tablet:h-120"
+        ></div>
       </div>
-      
+
       <!-- Secondary Glow - Top Right -->
-      <div class="glow-decoration absolute top-60% -right-10%" style="animation-delay: 2s">
-        <div class="glow-sphere w-64 h-64 mobile:w-80 mobile:h-80 tablet:w-96 tablet:h-96"></div>
+      <div
+        class="glow-decoration absolute top-60% -right-10%"
+        style="animation-delay: 2s"
+      >
+        <div
+          class="glow-sphere w-64 h-64 mobile:w-80 mobile:h-80 tablet:w-96 tablet:h-96"
+        ></div>
       </div>
-      
+
       <!-- Tertiary Glow - Bottom Left -->
-      <div class="glow-decoration absolute bottom-20% left-5%" style="animation-delay: 4s">
-        <div class="glow-sphere w-48 h-48 mobile:w-64 mobile:h-64 tablet:w-80 tablet:h-80"></div>
+      <div
+        class="glow-decoration absolute bottom-20% left-5%"
+        style="animation-delay: 4s"
+      >
+        <div
+          class="glow-sphere w-48 h-48 mobile:w-64 mobile:h-64 tablet:w-80 tablet:h-80"
+        ></div>
       </div>
     </div>
 
@@ -118,24 +169,41 @@
       <template #default>
         <div class="space-responsive">
           <div class="custom-block-info">
-            <strong>Mode Animateur :</strong> Parfait pour animer une soirée. Vous gérez les équipes et contrôlez le rythme du jeu.
+            <strong>Quiz Personnalisé :</strong> Importez vos propres questions
+            au format JSON depuis le presse-papiers.
           </div>
-          
+
           <div class="custom-block-tip">
-            <strong>Mode Participant :</strong> Idéal pour jouer seul ou en petit groupe. Navigation libre et interface simplifiée.
+            <strong>Quiz par Défaut :</strong> Utilisez notre collection de
+            questions sur le cinéma.
           </div>
-          
+
           <div class="grid-responsive grid-cols-1 mobile-lg:grid-cols-2">
+            <div>
+              <h4 class="heading-4 mb-3">Format JSON</h4>
+              <p class="body-sm mb-2">Le fichier JSON doit contenir :</p>
+              <ul class="space-y-2 body-sm">
+                <li class="flex items-center gap-2">
+                  <div class="i-carbon-checkmark text-green-1"></div>
+                  Un objet avec une propriété "questions"
+                </li>
+                <li class="flex items-center gap-2">
+                  <div class="i-carbon-checkmark text-green-1"></div>
+                  Chaque question avec id, question, answers, correctAnswer
+                </li>
+                <li class="flex items-center gap-2">
+                  <div class="i-carbon-checkmark text-green-1"></div>
+                  Explication optionnelle pour chaque question
+                </li>
+              </ul>
+            </div>
+
             <div>
               <h4 class="heading-4 mb-3">Fonctionnalités</h4>
               <ul class="space-y-2 body-sm">
                 <li class="flex items-center gap-2">
                   <div class="i-carbon-checkmark text-green-1"></div>
-                  Questions sur le cinéma
-                </li>
-                <li class="flex items-center gap-2">
-                  <div class="i-carbon-checkmark text-green-1"></div>
-                  Gestion d'équipes
+                  Navigation libre entre questions
                 </li>
                 <li class="flex items-center gap-2">
                   <div class="i-carbon-checkmark text-green-1"></div>
@@ -145,19 +213,16 @@
                   <div class="i-carbon-checkmark text-green-1"></div>
                   Interface responsive
                 </li>
+                <li class="flex items-center gap-2">
+                  <div class="i-carbon-checkmark text-green-1"></div>
+                  Sauvegarde automatique
+                </li>
               </ul>
-            </div>
-            
-            <div>
-              <h4 class="heading-4 mb-3">Prêt ?</h4>
-              <p class="body-sm mb-4">
-                Choisissez votre mode de jeu et commencez à tester vos connaissances cinéma !
-              </p>
-              <BaseButton 
-                variant="primary" 
+              <BaseButton
+                variant="primary"
                 size="md"
                 @click="showInstructions = false"
-                class="w-full"
+                class="w-full mt-4"
               >
                 Commencer
               </BaseButton>
@@ -170,45 +235,126 @@
 </template>
 
 <script setup lang="ts">
-import { ref, onMounted } from 'vue'
-import { useRouter } from 'vue-router'
-import { useQuizStore } from '@/stores/quiz'
-import BaseButton from '@/components/ui/BaseButton.vue'
-import BaseCard from '@/components/ui/BaseCard.vue'
-import BaseModal from '@/components/ui/BaseModal.vue'
+import { ref, onMounted } from "vue";
+import { useRouter } from "vue-router";
+import { useQuizStore } from "@/stores/quiz";
+import BaseButton from "@/components/ui/BaseButton.vue";
+import BaseCard from "@/components/ui/BaseCard.vue";
+import BaseModal from "@/components/ui/BaseModal.vue";
 
-import type { UserMode } from '@/types'
+const router = useRouter();
+const quizStore = useQuizStore();
+const isLoaded = ref(false);
+const showInstructions = ref(false);
+const isImporting = ref(false);
+const importMessage = ref("");
+const importSuccess = ref(false);
 
-const router = useRouter()
-const quizStore = useQuizStore()
-const isLoaded = ref(false)
-const showInstructions = ref(false)
-
-const selectMode = (mode: 'host' | 'participant') => {
-  // Set the user mode in the store
-  quizStore.setUserMode(mode)
-  
-  // Navigate based on the selected mode
-  if (mode === 'host') {
-    // For host mode, go to team setup first
-    router.push('/team-setup')
-  } else {
-    // For participant mode, go directly to quiz
-    router.push('/quiz')
+const startDefaultQuiz = async () => {
+  try {
+    await quizStore.loadQuestionsFromJSON();
+    router.push("/quiz");
+  } catch (error) {
+    importMessage.value = "Erreur lors du chargement du quiz par défaut";
+    importSuccess.value = false;
+    setTimeout(() => {
+      importMessage.value = "";
+    }, 3000);
   }
-}
+};
 
-const startQuiz = () => {
-  // Default behavior - go to participant mode
-  selectMode('participant')
-}
+const importFromClipboard = async () => {
+  if (!navigator.clipboard) {
+    importMessage.value =
+      "Le presse-papiers n'est pas supporté par votre navigateur";
+    importSuccess.value = false;
+    setTimeout(() => {
+      importMessage.value = "";
+    }, 3000);
+    return;
+  }
+
+  isImporting.value = true;
+  importMessage.value = "";
+
+  try {
+    const clipboardText = await navigator.clipboard.readText();
+
+    if (!clipboardText.trim()) {
+      throw new Error("Le presse-papiers est vide");
+    }
+
+    // Parse and validate JSON
+    let jsonData;
+    try {
+      jsonData = JSON.parse(clipboardText);
+    } catch (error) {
+      throw new Error("Format JSON invalide");
+    }
+
+    // Validate structure
+    if (!jsonData.questions || !Array.isArray(jsonData.questions)) {
+      throw new Error('Le JSON doit contenir un tableau "questions"');
+    }
+
+    if (jsonData.questions.length === 0) {
+      throw new Error("Aucune question trouvée");
+    }
+
+    // Validate each question
+    for (let i = 0; i < jsonData.questions.length; i++) {
+      const q = jsonData.questions[i];
+      if (
+        !q.id ||
+        !q.question ||
+        !q.answers ||
+        typeof q.correctAnswer !== "number"
+      ) {
+        throw new Error(`Question ${i + 1} invalide: champs requis manquants`);
+      }
+
+      if (!Array.isArray(q.answers) || q.answers.length === 0) {
+        throw new Error(`Question ${i + 1} invalide: réponses manquantes`);
+      }
+
+      if (q.correctAnswer < 0 || q.correctAnswer >= q.answers.length) {
+        throw new Error(
+          `Question ${i + 1} invalide: index de réponse correcte invalide`
+        );
+      }
+    }
+
+    // Load questions into store
+    quizStore.loadQuestions(jsonData.questions);
+
+    importMessage.value = `${jsonData.questions.length} question(s) importée(s) avec succès !`;
+    importSuccess.value = true;
+
+    // Auto-redirect to quiz after successful import
+    setTimeout(() => {
+      router.push("/quiz");
+    }, 1500);
+  } catch (error) {
+    importMessage.value =
+      error instanceof Error ? error.message : "Erreur lors de l'importation";
+    importSuccess.value = false;
+  } finally {
+    isImporting.value = false;
+
+    if (!importSuccess.value) {
+      setTimeout(() => {
+        importMessage.value = "";
+      }, 5000);
+    }
+  }
+};
 
 onMounted(() => {
   // Trigger animations after component mount
   setTimeout(() => {
-    isLoaded.value = true
-  }, 100)
-})
+    isLoaded.value = true;
+  }, 100);
+});
 </script>
 
 <style scoped>
@@ -249,48 +395,29 @@ onMounted(() => {
   animation-delay: 0.4s;
 }
 
-.mode-selection {
+.quiz-actions {
   opacity: 0;
   transition: opacity 0.6s ease-out;
 }
 
-.mode-selection.animate-fade-in {
+.quiz-actions.animate-fade-in {
   opacity: 1;
 }
 
-.mode-card {
+.import-card {
   opacity: 0;
   transform: translateY(30px);
   transition: all 0.6s cubic-bezier(0.34, 1.56, 0.64, 1);
 }
 
-.mode-card.animate-card-in {
-  opacity: 1;
-  transform: translateY(0);
-}
-
-.features-grid {
-  opacity: 0;
-  transition: opacity 0.6s ease-out;
-}
-
-.features-grid.animate-fade-in {
-  opacity: 1;
-}
-
-.feature-card {
-  opacity: 0;
-  transform: translateY(30px);
-  transition: all 0.6s cubic-bezier(0.34, 1.56, 0.64, 1);
-}
-
-.feature-card.animate-card-in {
+.import-card.animate-card-in {
   opacity: 1;
   transform: translateY(0);
 }
 
 @keyframes float-glow {
-  0%, 100% {
+  0%,
+  100% {
     transform: translateY(0px) translateX(0px);
   }
   33% {
@@ -326,7 +453,7 @@ onMounted(() => {
     filter: blur(60px);
     animation: float-glow 8s ease-in-out infinite !important; /* Only floating, no color animation */
   }
-  
+
   .dark .glow-sphere {
     opacity: 0.12;
   }
@@ -337,12 +464,12 @@ onMounted(() => {
   .app-icon,
   .main-title,
   .subtitle,
-  .features-grid,
-  .feature-card {
+  .quiz-actions,
+  .import-card {
     transition: none;
     animation: none;
   }
-  
+
   .glow-decoration {
     animation: none;
   }

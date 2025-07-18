@@ -3,7 +3,9 @@
     <!-- Loading State -->
     <div v-if="quizStore.state.isLoading" class="min-h-screen flex-center p-4">
       <div class="text-center">
-        <div class="w-12 h-12 border-4 border-brand-1/20 border-t-brand-1 rounded-full animate-spin mx-auto mb-4"></div>
+        <div
+          class="w-12 h-12 border-4 border-brand-1/20 border-t-brand-1 rounded-full animate-spin mx-auto mb-4"
+        ></div>
         <h2 class="heading-3 mb-2">Chargement du quiz...</h2>
         <p class="text-muted">Préparation des questions cinéma</p>
       </div>
@@ -11,7 +13,11 @@
 
     <!-- Error State -->
     <div v-else-if="quizStore.state.error" class="min-h-screen flex-center p-4">
-      <BaseCard variant="elevated" padding="lg" class="text-center max-w-md mx-auto">
+      <BaseCard
+        variant="elevated"
+        padding="lg"
+        class="text-center max-w-md mx-auto"
+      >
         <div class="text-4xl mb-4">⚠️</div>
         <h2 class="heading-3 mb-2">Oups ! Une erreur s'est produite</h2>
         <p class="text-muted mb-6">{{ quizStore.state.error }}</p>
@@ -34,13 +40,13 @@
           <div>
             <h1 class="heading-3">Quiz Cinéma</h1>
             <p class="small-text">
-              {{ isHostMode ? 'Mode Animateur' : 'Mode Participant' }}
-              {{ isHostMode && hasTeams ? `• ${quizStore.state.teams.length} équipe(s)` : '' }}
+              Question {{ quizStore.state.currentQuestionIndex + 1 }} sur
+              {{ quizStore.state.questions.length }}
             </p>
           </div>
-          
+
           <!-- Quiz Controls -->
-          <div class="flex items-center gap-3">            
+          <div class="flex items-center gap-3">
             <BaseButton
               variant="ghost"
               size="sm"
@@ -54,30 +60,6 @@
         </div>
       </div>
 
-      <!-- Host Mode - Team Status Bar -->
-      <div v-if="isHostMode && hasTeams" class="bg-bg border-b border-divider py-3">
-        <div class="container-app flex-between flex-wrap gap-3">
-          <div class="flex items-center gap-3 flex-wrap">
-            <span class="small-text font-medium text-muted">Équipes assignées:</span>
-            <div class="flex items-center gap-2 flex-wrap">
-              <span 
-                v-for="team in quizStore.state.teams" 
-                :key="team.id"
-                class="px-2 py-1 rounded-full text-xs font-medium border transition-all duration-200"
-                :class="isTeamAssignedToCurrentQuestion(team.id) ? 'bg-green-soft text-green-1 border-green-1/30' : 'bg-bg-soft text-subtle border-divider'"
-              >
-                {{ team.name }}
-              </span>
-            </div>
-          </div>
-          
-          <div v-if="!quizStore.canProceedToNextQuestion" class="flex items-center gap-2 small-text">
-            <span class="text-yellow-1">⏳</span>
-            <span class="text-muted font-medium">Assignez toutes les équipes pour continuer</span>
-          </div>
-        </div>
-      </div>
-
       <!-- Question Card -->
       <div class="container-app px-4 py-8">
         <QuestionCard
@@ -86,397 +68,155 @@
           :question="quizStore.currentQuestion"
           :question-number="quizStore.state.currentQuestionIndex + 1"
           :total-questions="quizStore.state.questions.length"
-          :user-mode="quizStore.state.userMode"
-          :teams="quizStore.state.teams"
-          :team-assignments="currentQuestionAssignments"
-          :auto-reveal="!isHostMode"
-          :reveal-delay="isHostMode ? 0 : 1200"
+          :user-answer="
+            quizStore.state.participantAnswers[
+              quizStore.state.currentQuestionIndex
+            ]
+          "
           :has-previous="quizStore.hasPreviousQuestion"
           :has-next="quizStore.hasNextQuestion"
           @answer="handleAnswer"
-          @next="handleNextParticipant"
+          @next="handleNext"
           @previous="handlePrevious"
-          @team-answer-assigned="handleTeamAnswerAssigned"
-          @team-assignment-requested="handleTeamAssignmentRequested"
-          ref="questionCardRef"
         />
       </div>
-
-
     </div>
 
     <!-- Quiz Completed - Redirect to Results -->
     <div v-else class="min-h-screen flex-center p-4">
       <div class="text-center">
-        <div class="text-4xl mb-4">
-          <div class="i-carbon-trophy text-current"></div>
-        </div>
-        <h2 class="heading-3 mb-2">Quiz terminé !</h2>
-        <p class="text-muted mb-4">Redirection vers les résultats...</p>
-        <div class="w-6 h-6 border-2 border-brand-1/20 border-t-brand-1 rounded-full animate-spin mx-auto"></div>
+        <div class="text-4xl mb-4">🎉</div>
+        <h2 class="heading-2 mb-4">Quiz terminé !</h2>
+        <p class="text-muted mb-6">Redirection vers vos résultats...</p>
+        <div
+          class="w-8 h-8 border-4 border-brand-1/20 border-t-brand-1 rounded-full animate-spin mx-auto"
+        ></div>
       </div>
     </div>
 
     <!-- Quit Confirmation Dialog -->
-    <div v-if="showQuitDialog" class="fixed inset-0 bg-black/50 flex-center p-4 z-50 backdrop-blur-sm" @click="showQuitDialog = false">
-      <div class="w-full max-w-lg mx-auto animate-dialog-slide-in" @click.stop>
-        <BaseCard variant="elevated" padding="lg">
-          <div class="text-center mb-6">
-            <h3 class="heading-3 mb-2">Quitter le quiz ?</h3>
-            <p class="text-muted">
-              Vous allez revenir à l'accueil. Continuer ?
-            </p>
-          </div>
-          
-          <div class="flex gap-3 flex-col sm:flex-row">
-            <BaseButton
-              variant="outline"
-              size="sm"
-              @click="showQuitDialog = false"
-              class="w-full sm:flex-1 sm:min-w-0"
-            >
-              Annuler
-            </BaseButton>
-            <BaseButton
-              variant="primary"
-              size="sm"
-              @click="confirmQuit"
-              class="w-full sm:flex-1 sm:min-w-0"
-            >
-              Quitter
-            </BaseButton>
-          </div>
-        </BaseCard>
+    <BaseModal
+      v-model:isVisible="showQuitDialog"
+      title="Quitter le quiz"
+      @confirm="confirmQuit"
+    >
+      <p class="text-muted mb-4">
+        Êtes-vous sûr de vouloir quitter le quiz ? Votre progression sera
+        sauvegardée.
+      </p>
+      <div class="flex gap-3 justify-end">
+        <BaseButton variant="outline" @click="showQuitDialog = false">
+          Annuler
+        </BaseButton>
+        <BaseButton variant="secondary" @click="confirmQuit">
+          Quitter
+        </BaseButton>
       </div>
-    </div>
+    </BaseModal>
 
     <!-- Restart Confirmation Dialog -->
-    <div v-if="showRestartDialog" class="fixed inset-0 bg-black/50 flex-center p-4 z-50 backdrop-blur-sm" @click="showRestartDialog = false">
-      <div class="w-full max-w-md mx-auto animate-dialog-slide-in" @click.stop>
-        <BaseCard variant="elevated" padding="lg">
-          <div class="text-center mb-6">
-            <h3 class="heading-3 mb-2">Recommencer le quiz ?</h3>
-            <p class="text-muted">
-              Votre progression actuelle sera perdue. Voulez-vous vraiment recommencer ?
-            </p>
-          </div>
-          
-          <div class="flex gap-3 mobile:flex-col">
-            <BaseButton
-              variant="outline"
-              @click="showRestartDialog = false"
-              class="flex-1"
-            >
-              Annuler
-            </BaseButton>
-            <BaseButton
-              variant="primary"
-              @click="confirmRestart"
-              class="flex-1"
-            >
-              Oui, recommencer
-            </BaseButton>
-          </div>
-        </BaseCard>
+    <BaseModal
+      v-model:isVisible="showRestartDialog"
+      title="Recommencer le quiz"
+      @confirm="confirmRestart"
+    >
+      <p class="text-muted mb-4">
+        Êtes-vous sûr de vouloir recommencer le quiz ? Toutes vos réponses
+        actuelles seront perdues.
+      </p>
+      <div class="flex gap-3 justify-end">
+        <BaseButton variant="outline" @click="showRestartDialog = false">
+          Annuler
+        </BaseButton>
+        <BaseButton variant="primary" @click="confirmRestart">
+          Recommencer
+        </BaseButton>
       </div>
-    </div>
-
-    <!-- Team Assignment Modal -->
-    <TeamAssignmentModal
-      v-if="showTeamAssignmentModal"
-      :is-visible="showTeamAssignmentModal"
-      :teams="quizStore.state.teams"
-      :existing-assignments="currentQuestionAssignments"
-      :selected-answer-index="selectedAnswerIndex"
-      :selected-answer="selectedAnswer"
-      :current-question-id="quizStore.currentQuestion?.id || ''"
-      :all-answers="quizStore.currentQuestion?.answers || []"
-      @team-selected="handleTeamSelected"
-      @modal-closed="handleTeamAssignmentModalClosed"
-    />
+    </BaseModal>
   </div>
 </template>
 
 <script setup lang="ts">
-import { ref, computed, onMounted, onUnmounted, nextTick } from 'vue'
-import { useRouter } from 'vue-router'
-import { useQuizStore } from '@/stores/quiz'
-import QuestionCard from '@/components/quiz/QuestionCard.vue'
-import QuestionNavigation from '@/components/quiz/QuestionNavigation.vue'
-import BaseCard from '@/components/ui/BaseCard.vue'
-import BaseButton from '@/components/ui/BaseButton.vue'
-import TeamAssignmentModal from '@/components/quiz/TeamAssignmentModal.vue'
+import { ref, onMounted, watch } from "vue";
+import { useRouter } from "vue-router";
+import { useQuizStore } from "@/stores/quiz";
+import QuestionCard from "@/components/quiz/QuestionCard.vue";
+import BaseCard from "@/components/ui/BaseCard.vue";
+import BaseButton from "@/components/ui/BaseButton.vue";
+import BaseModal from "@/components/ui/BaseModal.vue";
 
-const router = useRouter()
-const quizStore = useQuizStore()
+const router = useRouter();
+const quizStore = useQuizStore();
 
 // Component state
-const showQuitDialog = ref(false)
-const showRestartDialog = ref(false)
-const questionCardRef = ref<InstanceType<typeof QuestionCard> | null>(null)
-const isTransitioning = ref(false)
-
-// Team assignment modal state
-const showTeamAssignmentModal = ref(false)
-const selectedAnswerIndex = ref<number>(-1)
-const selectedAnswer = ref<string>('')
-
-// Computed properties for mode handling
-const isHostMode = computed(() => quizStore.state.userMode === 'host')
-const hasTeams = computed(() => quizStore.state.teams.length > 0)
-
-// Helper method to check if team is assigned to current question
-const isTeamAssignedToCurrentQuestion = (teamId: string) => {
-  if (!quizStore.currentQuestion) return false
-  
-  return quizStore.state.teamAnswers.some(
-    answer => answer.questionId === quizStore.currentQuestion!.id && answer.teamId === teamId
-  )
-}
+const showQuitDialog = ref(false);
+const showRestartDialog = ref(false);
 
 // Methods
-const handleAnswer = (answerIndex: number, isCorrect: boolean) => {
-  if (isHostMode.value) {
-    // In host mode, answers are handled through team assignment
-    return
+const handleAnswer = (answerIndex: number) => {
+  quizStore.answerQuestion(answerIndex);
+};
+
+const handleNext = () => {
+  const hasNext = quizStore.goToNextQuestion();
+  if (!hasNext) {
+    // Quiz completed, redirect to results
+    router.push("/results");
   }
-  // Note: Participant mode doesn't use this since answer buttons are disabled
-}
+};
 
-const handleTeamAnswerAssigned = (data: { questionId: string, answerIndex: number, teamId: string }) => {
-  if (isHostMode.value) {
-    quizStore.assignAnswerToTeam(data.questionId, data.answerIndex, data.teamId)
-    
-    // Auto-save session for host mode
-    quizStore.autoSaveSession()
-  }
-}
-
-// Team assignment modal handlers
-const handleTeamAssignmentRequested = (answerIndex: number) => {
-  if (!isHostMode.value || !quizStore.currentQuestion) return
-  
-  selectedAnswerIndex.value = answerIndex
-  selectedAnswer.value = quizStore.currentQuestion.answers[answerIndex]
-  showTeamAssignmentModal.value = true
-}
-
-const handleTeamSelected = (teamId: string, answerIndex: number) => {
-  if (!quizStore.currentQuestion) return
-  
-  // Assign the team to the selected answer
-  const success = quizStore.assignAnswerToTeam(
-    quizStore.currentQuestion.id, 
-    answerIndex, 
-    teamId
-  )
-  
-  if (success) {
-    // Auto-save session for host mode
-    quizStore.autoSaveSession()
-    
-    // Close the modal
-    showTeamAssignmentModal.value = false
-    selectedAnswerIndex.value = -1
-    selectedAnswer.value = ''
-  }
-}
-
-const handleTeamAssignmentModalClosed = () => {
-  showTeamAssignmentModal.value = false
-  selectedAnswerIndex.value = -1
-  selectedAnswer.value = ''
-}
-
-// Computed property for available teams (not yet assigned to current question)
-const availableTeams = computed(() => {
-  // Return all teams - the modal will handle filtering available vs assigned teams
-  return quizStore.state.teams
-})
-
-// Computed property for existing assignments map
-const currentQuestionAssignments = computed(() => {
-  if (!quizStore.currentQuestion) return new Map()
-  
-  const assignments = new Map<number, string[]>()
-  
-  quizStore.state.teamAnswers
-    .filter(answer => answer.questionId === quizStore.currentQuestion!.id)
-    .forEach(answer => {
-      const teamIds = assignments.get(answer.answerIndex) || []
-      teamIds.push(answer.teamId)
-      assignments.set(answer.answerIndex, teamIds)
-    })
-  
-  return assignments
-})
-
-const handleNext = async () => {
-  if (isTransitioning.value) return
-  
-  isTransitioning.value = true
-  
-  try {
-    if (isHostMode.value) {
-      // In host mode, use proceedToNextQuestion which validates team assignments
-      const canProceed = quizStore.proceedToNextQuestion()
-      
-      if (!canProceed && !quizStore.state.isCompleted) {
-        // Show validation error
-        return
-      }
-    }
-    
-    // Check if quiz is completed
-    if (quizStore.state.isCompleted) {
-      // Redirect to results with a smooth transition
-      await nextTick()
-      setTimeout(() => {
-        if (isHostMode.value) {
-          router.push('/team-results')
-        } else {
-          router.push('/results')
-        }
-      }, 1000)
-    } else {
-      // Continue to next question
-      await nextTick()
-    }
-  } finally {
-    setTimeout(() => {
-      isTransitioning.value = false
-    }, 500)
-  }
-}
-
-// Participant mode navigation methods
 const handlePrevious = () => {
-  if (!isHostMode.value && quizStore.hasPreviousQuestion) {
-    quizStore.goToPreviousQuestion()
-  }
-}
-
-const handleNextParticipant = () => {
-  if (!isHostMode.value && quizStore.hasNextQuestion) {
-    quizStore.goToNextQuestion()
-  }
-}
-
-const handleGoToQuestion = (questionIndex: number) => {
-  if (!isHostMode.value) {
-    quizStore.goToQuestion(questionIndex)
-  }
-}
+  quizStore.goToPreviousQuestion();
+};
 
 const retryLoadQuestions = async () => {
-  quizStore.clearError()
-  await quizStore.loadQuestionsWithCache()
-  
-  if (!quizStore.state.error && quizStore.state.questions.length > 0) {
-    quizStore.startQuiz()
+  try {
+    await quizStore.loadQuestionsFromJSON();
+  } catch (error) {
+    console.error("Failed to reload questions:", error);
   }
-}
+};
 
 const goHome = () => {
-  router.push('/')
-}
+  router.push("/");
+};
 
 const confirmQuit = () => {
-  showQuitDialog.value = false
-  router.push('/')
-  // Reset to first question instead of going home
-  quizStore.state.currentQuestionIndex = 0
-}
-
-const showRestartConfirmation = () => {
-  showRestartDialog.value = true
-}
+  router.push("/");
+};
 
 const confirmRestart = () => {
-  showRestartDialog.value = false
-  quizStore.resetQuiz()
-  quizStore.startQuiz()
-}
+  quizStore.resetQuiz();
+  showRestartDialog.value = false;
+};
 
-// Keyboard shortcuts
-const handleKeydown = (event: KeyboardEvent) => {
-  // ESC to show quit dialog
-  if (event.key === 'Escape' && !showQuitDialog.value && !showRestartDialog.value) {
-    showQuitDialog.value = true
+// Watch for quiz completion and redirect
+watch(
+  () => quizStore.state.isCompleted,
+  (completed) => {
+    if (completed) {
+      router.push("/results");
+    }
   }
-  
-  // R to restart (Ctrl+R or Cmd+R)
-  if ((event.ctrlKey || event.metaKey) && event.key === 'r' && !event.shiftKey) {
-    event.preventDefault()
-    showRestartConfirmation()
-  }
-}
+);
 
-// Lifecycle
+// Load questions if not already loaded
 onMounted(async () => {
-  // Add keyboard event listeners
-  window.addEventListener('keydown', handleKeydown)
-  
-  // Load questions if not already loaded
   if (quizStore.state.questions.length === 0) {
-    await quizStore.loadQuestionsWithCache()
+    await quizStore.loadQuestionsFromJSON();
   }
-  
-  // Start quiz if questions are loaded and quiz hasn't started
-  if (quizStore.state.questions.length > 0 && !quizStore.isQuizStarted) {
-    quizStore.startQuiz()
-  }
-  
-  // If quiz is already completed, redirect to results
-  if (quizStore.state.isCompleted) {
-    router.push('/results')
-  }
-})
-
-onUnmounted(() => {
-  // Remove keyboard event listeners
-  window.removeEventListener('keydown', handleKeydown)
-})
-
-// Prevent accidental page refresh
-const handleBeforeUnload = (event: BeforeUnloadEvent) => {
-  if (quizStore.isQuizStarted && !quizStore.state.isCompleted) {
-    event.preventDefault()
-    event.returnValue = 'Votre progression sera perdue si vous quittez maintenant.'
-    return event.returnValue
-  }
-}
-
-onMounted(() => {
-  window.addEventListener('beforeunload', handleBeforeUnload)
-})
-
-onUnmounted(() => {
-  window.removeEventListener('beforeunload', handleBeforeUnload)
-})
+});
 </script>
 
 <style scoped>
-/* Custom animations that can't be easily replaced with UnoCSS utilities */
-@keyframes dialogSlideIn {
-  from {
-    opacity: 0;
-    transform: translateY(-20px) scale(0.95);
-  }
-  to {
-    opacity: 1;
-    transform: translateY(0) scale(1);
-  }
-}
-
-.animate-dialog-slide-in {
-  animation: dialogSlideIn 0.3s ease-out;
-}
-
-/* Accessibility */
-@media (prefers-reduced-motion: reduce) {
-  .animate-dialog-slide-in {
-    animation: none;
-  }
+/* Quiz-specific styles */
+.quiz-progress {
+  background: linear-gradient(
+    to right,
+    var(--color-brand-1) 0%,
+    var(--color-brand-1) var(--progress),
+    var(--color-bg-soft) var(--progress),
+    var(--color-bg-soft) 100%
+  );
 }
 </style>

@@ -1,6 +1,6 @@
 {
   "metadata": {
-    "title": "Quiz Cinéma Soirée Filles",
+    "title": "Soirée CinéQuiz",
     "version": "1.0",
     "totalQuestions": 18,
     "categories": ["Romance", "Comédie", "Drame", "Acteurs", "Réalisateurs"],
@@ -12,7 +12,7 @@
       "question": "Dans quel film Julia Roberts dit-elle 'Big mistake. Big. Huge!' ?",
       "answers": [
         "Pretty Woman",
-        "Notting Hill", 
+        "Notting Hill",
         "My Best Friend's Wedding",
         "Erin Brockovich"
       ],
@@ -66,12 +66,7 @@
     {
       "id": "q005",
       "question": "Dans 'Mamma Mia!', les chansons sont de quel groupe ?",
-      "answers": [
-        "Queen",
-        "ABBA",
-        "The Beatles",
-        "Bee Gees"
-      ],
+      "answers": ["Queen", "ABBA", "The Beatles", "Bee Gees"],
       "correctAnswer": 1,
       "category": "Comédie",
       "difficulty": "easy",
@@ -164,12 +159,7 @@
     {
       "id": "q012",
       "question": "Quel film de 2019 a remporté l'Oscar du meilleur film ?",
-      "answers": [
-        "1917",
-        "Joker",
-        "Parasite",
-        "Once Upon a Time in Hollywood"
-      ],
+      "answers": ["1917", "Joker", "Parasite", "Once Upon a Time in Hollywood"],
       "correctAnswer": 2,
       "category": "Drame",
       "difficulty": "hard",
@@ -206,12 +196,7 @@
     {
       "id": "q015",
       "question": "Dans 'Legally Blonde', quelle université intègre Elle Woods ?",
-      "answers": [
-        "Yale",
-        "Harvard",
-        "Stanford",
-        "Columbia"
-      ],
+      "answers": ["Yale", "Harvard", "Stanford", "Columbia"],
       "correctAnswer": 1,
       "category": "Comédie",
       "difficulty": "medium",
