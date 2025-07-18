@@ -61,7 +61,7 @@
       </div>
 
       <!-- Question Card -->
-      <div class="container-app px-4 py-8 pb-20">
+      <div class="container-app px-4 py-8">
         <QuestionCard
           v-if="quizStore.currentQuestion"
           :key="quizStore.currentQuestion.id"
@@ -82,9 +82,7 @@
       </div>
 
       <!-- Footer with answers button -->
-      <div
-        class="fixed bottom-0 left-0 right-0 bg-bg border-t border-divider p-4 z-10"
-      >
+      <div class="bg-bg border-t border-divider p-4">
         <div class="container-app">
           <div class="flex justify-center">
             <BaseButton
