@@ -80,55 +80,7 @@
           @previous="handlePrevious"
         />
       </div>
-
-      <!-- Quiz Footer -->
-      <!-- <div
-        class="fixed bottom-0 left-0 right-0 z-10 bg-bg border-t border-divider shadow-lg"
-      >
-        <div class="container-app py-3">
-          <div class="flex justify-center">
-            <BaseButton
-              variant="outline"
-              size="sm"
-              @click="shareQuiz"
-              :disabled="isSharing"
-              class="flex items-center gap-2"
-              :class="{
-                'text-green-1 border-green-1': shareSuccess,
-                'cursor-wait': isSharing,
-              }"
-            >
-              <div
-                v-if="isSharing"
-                class="i-carbon-circle-dash animate-spin text-sm"
-              ></div>
-              <div
-                v-else-if="shareSuccess"
-                class="i-carbon-checkmark text-sm"
-              ></div>
-              <div v-else class="i-carbon-share text-sm"></div>
-
-              <span v-if="isSharing">Partage...</span>
-              <span v-else-if="shareSuccess">Lien copié !</span>
-              <span v-else>Partager ce quiz</span>
-            </BaseButton>
-          </div>
-        </div>
-      </div>
-    </div> -->
-
-    <!-- Quiz Completed - Redirect to Results -->
-    <!-- <div v-else class="min-h-screen flex-center p-4">
-      <div class="text-center">
-        <div class="text-4xl mb-4">🎉</div>
-        <h2 class="heading-2 mb-4">Quiz terminé !</h2>
-        <p class="text-muted mb-6">Redirection vers vos résultats...</p>
-        <div
-          class="w-8 h-8 border-4 border-brand-1/20 border-t-brand-1 rounded-full animate-spin mx-auto"
-        ></div>
-      </div>
-    </div> -->
-
+    </div>
     <!-- Quit Confirmation Dialog -->
     <BaseModal
       v-model:isVisible="showQuitDialog"
