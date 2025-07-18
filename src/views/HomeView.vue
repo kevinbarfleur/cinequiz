@@ -33,45 +33,34 @@
             variant="elevated"
             hover
             padding="none"
-            :class="{ 'animate-card-in': isLoaded }"
+            :class="{
+              'animate-card-in': isLoaded,
+              'opacity-50 cursor-wait': isImporting,
+            }"
             :style="{ animationDelay: '0.3s' }"
-            class="import-card border-2 border-transparent relative overflow-hidden hover:border-brand-1/30 hover:shadow-lg hover:-translate-y-2 transition-all duration-300 max-w-md mx-auto mb-6"
+            class="import-card border-2 border-dashed border-brand-1/20 relative overflow-hidden hover:border-brand-1/40 hover:shadow-lg hover:-translate-y-2 transition-all duration-300 max-w-md mx-auto mb-6 cursor-pointer"
+            @click="importFromClipboard"
           >
             <div
               class="p-responsive text-center h-full flex flex-col justify-between"
             >
               <div class="text-4xl mobile:text-5xl mb-4 text-brand-1">
-                <div class="i-carbon-document-import"></div>
+                <div v-if="!isImporting" class="i-carbon-document-import"></div>
+                <div v-else class="i-carbon-circle-dash animate-spin"></div>
               </div>
               <h3 class="heading-3 mb-4">Importer des Questions</h3>
               <p class="body-sm mb-6">
-                Collez un fichier JSON de questions depuis votre presse-papiers
-                pour créer un quiz personnalisé
-              </p>
-              <BaseButton
-                variant="secondary"
-                size="lg"
-                class="w-full mb-4"
-                @click="importFromClipboard"
-                :disabled="isImporting"
-              >
-                <span class="flex items-center justify-center gap-2">
-                  <span v-if="!isImporting"
-                    >Importer depuis le Presse-papiers</span
-                  >
-                  <span v-else>Importation en cours...</span>
-                  <div v-if="!isImporting" class="i-carbon-paste text-lg"></div>
-                  <div
-                    v-else
-                    class="i-carbon-circle-dash text-lg animate-spin"
-                  ></div>
+                <span v-if="!isImporting">
+                  Cliquez pour coller un fichier JSON de questions depuis votre
+                  presse-papiers
                 </span>
-              </BaseButton>
+                <span v-else> Importation en cours... </span>
+              </p>
 
               <!-- Success/Error Messages -->
               <div
                 v-if="importMessage"
-                class="text-sm"
+                class="text-sm mt-4"
                 :class="{
                   'text-green-1': importSuccess,
                   'text-red-1': !importSuccess,
@@ -173,6 +162,16 @@
             au format JSON depuis le presse-papiers.
           </div>
 
+          <!-- ChatGPT Generation Button -->
+          <div class="text-center my-4">
+            <BaseButton variant="secondary" size="md" @click="openChatGPT">
+              <span class="flex items-center gap-2">
+                <div class="i-carbon-chat text-lg"></div>
+                Générer des questions avec ChatGPT
+              </span>
+            </BaseButton>
+          </div>
+
           <div class="custom-block-tip">
             <strong>Quiz par Défaut :</strong> Utilisez notre collection de
             questions sur le cinéma.
@@ -235,7 +234,7 @@
 </template>
 
 <script setup lang="ts">
-import { ref, onMounted } from "vue";
+import { ref, computed, onMounted } from "vue";
 import { useRouter } from "vue-router";
 import { useQuizStore } from "@/stores/quiz";
 import BaseButton from "@/components/ui/BaseButton.vue";
@@ -250,6 +249,36 @@ const isImporting = ref(false);
 const importMessage = ref("");
 const importSuccess = ref(false);
 
+// ChatGPT URL with pre-filled prompt
+const chatGptUrl = computed(() => {
+  const prompt = `Je veux que tu me genere un JSON pour mon quiz cinéma. Format obligatoire avec title "Soirée CinéQuiz" et au moins 10 questions:
+
+{
+  "metadata": {
+    "title": "Soirée CinéQuiz", 
+    "version": "1.0",
+    "totalQuestions": 10,
+    "categories": ["Romance", "Comédie", "Drame", "Acteurs"],
+    "description": "Quiz cinéma"
+  },
+  "questions": [
+    {
+      "id": "q001",
+      "question": "Question example?",
+      "answers": ["A", "B", "C", "D"],
+      "correctAnswer": 0,
+      "category": "Romance",
+      "difficulty": "medium",
+      "explanation": "Explication"
+    }
+  ]
+}`;
+
+  return `https://chat.openai.com/?model=gpt-4o&q=${encodeURIComponent(
+    prompt
+  )}`;
+});
+
 const startDefaultQuiz = async () => {
   try {
     await quizStore.loadQuestionsFromJSON();
@@ -261,6 +290,10 @@ const startDefaultQuiz = async () => {
       importMessage.value = "";
     }, 3000);
   }
+};
+
+const openChatGPT = () => {
+  window.open(chatGptUrl.value, "_blank", "noopener,noreferrer");
 };
 
 const importFromClipboard = async () => {
