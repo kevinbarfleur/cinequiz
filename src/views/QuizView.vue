@@ -259,8 +259,6 @@ const quizStore = useQuizStore();
 const showQuitDialog = ref(false);
 const showRestartDialog = ref(false);
 const showAnswersDialog = ref(false);
-const isSharing = ref(false);
-const shareSuccess = ref(false);
 const passwordValue = ref("");
 const passwordError = ref("");
 const isAnswersUnlocked = ref(false);
@@ -331,65 +329,6 @@ watch(showAnswersDialog, async (newValue) => {
     passwordInput.value?.focus();
   }
 });
-
-const shareQuiz = async () => {
-  if (isSharing.value) return;
-
-  isSharing.value = true;
-  shareSuccess.value = false;
-
-  try {
-    // Get current quiz data
-    const quizData = {
-      questions: quizStore.state.questions,
-      metadata: {
-        title: "Quiz Cinéma Partagé",
-        description: "Quiz généré et partagé via CinéQuiz",
-        totalQuestions: quizStore.state.questions.length,
-        createdAt: new Date().toISOString(),
-      },
-    };
-
-    // Encode quiz data as base64 URL parameter
-    const encodedQuiz = btoa(encodeURIComponent(JSON.stringify(quizData)));
-    const shareUrl = `https://cinequizapp.netlify.app/?quiz=${encodedQuiz}`;
-
-    // Try to use Web Share API if available, otherwise copy to clipboard
-    if (navigator.share) {
-      await navigator.share({
-        title: "Quiz Cinéma - CinéQuiz",
-        text: `Découvrez ce quiz cinéma de ${quizData.questions.length} questions !`,
-        url: shareUrl,
-      });
-      shareSuccess.value = true;
-    } else if (navigator.clipboard) {
-      await navigator.clipboard.writeText(shareUrl);
-      shareSuccess.value = true;
-
-      // Show success feedback
-      setTimeout(() => {
-        shareSuccess.value = false;
-      }, 2000);
-    } else {
-      // Fallback: show the URL in a prompt
-      const userCopied = prompt(
-        "Copiez ce lien pour partager le quiz:",
-        shareUrl
-      );
-      if (userCopied !== null) {
-        shareSuccess.value = true;
-        setTimeout(() => {
-          shareSuccess.value = false;
-        }, 2000);
-      }
-    }
-  } catch (error) {
-    console.error("Erreur lors du partage:", error);
-    // Don't show alert, just log the error
-  } finally {
-    isSharing.value = false;
-  }
-};
 
 const loadQuizFromUrl = () => {
   const urlParams = new URLSearchParams(window.location.search);

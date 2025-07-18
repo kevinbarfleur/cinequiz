@@ -1,6 +1,4 @@
 export { default as AnswerButton } from './AnswerButton.vue'
-export { default as AnswerButtonDemo } from './AnswerButtonDemo.vue'
 export { default as QuestionCard } from './QuestionCard.vue'
 export { default as QuestionNavigation } from './QuestionNavigation.vue'
 export { default as ScoreDisplay } from './ScoreDisplay.vue'
-export { default as ScoreDisplayDemo } from './ScoreDisplayDemo.vue'
