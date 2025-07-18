@@ -148,6 +148,7 @@
     <BaseModal
       v-model:isVisible="showAnswersDialog"
       title="Accès aux réponses"
+      size="xl"
       @confirm="verifyPassword"
     >
       <div v-if="!isAnswersUnlocked">
@@ -167,7 +168,7 @@
         </p>
       </div>
       <div v-else>
-        <div class="space-y-2">
+        <div class="space-y-2 overflow-y-auto" style="max-height: 60vh">
           <div
             v-for="(question, index) in quizStore.state.questions"
             :key="question.id"
@@ -211,32 +212,35 @@
           </div>
         </div>
       </div>
-      <div class="btn-group-end mt-4">
-        <BaseButton
-          v-if="!isAnswersUnlocked"
-          variant="outline"
-          class="btn-modal"
-          @click="closeAnswersDialog"
-        >
-          Annuler
-        </BaseButton>
-        <BaseButton
-          v-if="!isAnswersUnlocked"
-          variant="primary"
-          class="btn-modal"
-          @click="verifyPassword"
-        >
-          Confirmer
-        </BaseButton>
-        <BaseButton
-          v-else
-          variant="outline"
-          class="btn-modal"
-          @click="closeAnswersDialog"
-        >
-          Fermer
-        </BaseButton>
-      </div>
+
+      <template #footer>
+        <div class="btn-group-end">
+          <BaseButton
+            v-if="!isAnswersUnlocked"
+            variant="outline"
+            class="btn-modal"
+            @click="closeAnswersDialog"
+          >
+            Annuler
+          </BaseButton>
+          <BaseButton
+            v-if="!isAnswersUnlocked"
+            variant="primary"
+            class="btn-modal"
+            @click="verifyPassword"
+          >
+            Confirmer
+          </BaseButton>
+          <BaseButton
+            v-else
+            variant="outline"
+            class="btn-modal"
+            @click="closeAnswersDialog"
+          >
+            Fermer
+          </BaseButton>
+        </div>
+      </template>
     </BaseModal>
   </div>
 </template>
