@@ -80,7 +80,27 @@
           @previous="handlePrevious"
         />
       </div>
+
+      <!-- Footer with answers button -->
+      <div
+        class="fixed bottom-0 left-0 right-0 bg-bg border-t border-divider p-4 z-10"
+      >
+        <div class="container-app">
+          <div class="flex justify-center">
+            <BaseButton
+              variant="ghost"
+              size="sm"
+              @click="showAnswersDialog = true"
+              class="text-muted hover:text-brand-1 transition-colors"
+            >
+              <div class="i-carbon-view text-sm mr-2"></div>
+              Voir les réponses
+            </BaseButton>
+          </div>
+        </div>
+      </div>
     </div>
+
     <!-- Quit Confirmation Dialog -->
     <BaseModal
       v-model:isVisible="showQuitDialog"
@@ -125,11 +145,106 @@
         </BaseButton>
       </div>
     </BaseModal>
+
+    <!-- Password Dialog for Answers -->
+    <BaseModal
+      v-model:isVisible="showAnswersDialog"
+      title="Accès aux réponses"
+      @confirm="verifyPassword"
+    >
+      <div v-if="!isAnswersUnlocked">
+        <p class="text-muted mb-4">
+          Entrez le mot de passe pour voir les réponses :
+        </p>
+        <input
+          ref="passwordInput"
+          v-model="passwordValue"
+          type="password"
+          placeholder="Mot de passe"
+          class="w-full px-3 py-2 border border-divider rounded-lg focus:outline-none focus:ring-2 focus:ring-brand-1 focus:border-transparent"
+          @keyup.enter="verifyPassword"
+        />
+        <p v-if="passwordError" class="text-red-1 text-sm mt-2">
+          {{ passwordError }}
+        </p>
+      </div>
+      <div v-else class="max-h-96 overflow-y-auto">
+        <div class="space-y-4">
+          <div
+            v-for="(question, index) in quizStore.state.questions"
+            :key="question.id"
+            class="border border-divider rounded-lg p-3"
+          >
+            <div class="flex items-start gap-3">
+              <div class="text-brand-1 font-medium text-sm">
+                {{ index + 1 }}.
+              </div>
+              <div class="flex-1">
+                <p class="text-sm font-medium mb-2">{{ question.question }}</p>
+                <div class="space-y-1">
+                  <div
+                    v-for="(answer, answerIndex) in question.answers"
+                    :key="answerIndex"
+                    class="flex items-center gap-2 text-xs"
+                    :class="{
+                      'text-green-1 font-medium':
+                        answerIndex === question.correctAnswer,
+                      'text-muted': answerIndex !== question.correctAnswer,
+                    }"
+                  >
+                    <div
+                      class="w-2 h-2 rounded-full"
+                      :class="{
+                        'bg-green-1': answerIndex === question.correctAnswer,
+                        'bg-divider': answerIndex !== question.correctAnswer,
+                      }"
+                    ></div>
+                    {{ answer }}
+                  </div>
+                </div>
+                <div
+                  v-if="question.explanation"
+                  class="mt-2 text-xs text-muted italic"
+                >
+                  {{ question.explanation }}
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="btn-group-end mt-4">
+        <BaseButton
+          v-if="!isAnswersUnlocked"
+          variant="outline"
+          class="btn-modal"
+          @click="closeAnswersDialog"
+        >
+          Annuler
+        </BaseButton>
+        <BaseButton
+          v-if="!isAnswersUnlocked"
+          variant="primary"
+          class="btn-modal"
+          @click="verifyPassword"
+        >
+          Confirmer
+        </BaseButton>
+        <BaseButton
+          v-else
+          variant="outline"
+          class="btn-modal"
+          @click="closeAnswersDialog"
+        >
+          Fermer
+        </BaseButton>
+      </div>
+    </BaseModal>
   </div>
 </template>
 
 <script setup lang="ts">
-import { ref, onMounted, watch } from "vue";
+import { ref, onMounted, watch, nextTick } from "vue";
 import { useRouter } from "vue-router";
 import { useQuizStore } from "@/stores/quiz";
 import QuestionCard from "@/components/quiz/QuestionCard.vue";
@@ -143,8 +258,16 @@ const quizStore = useQuizStore();
 // Component state
 const showQuitDialog = ref(false);
 const showRestartDialog = ref(false);
+const showAnswersDialog = ref(false);
 const isSharing = ref(false);
 const shareSuccess = ref(false);
+const passwordValue = ref("");
+const passwordError = ref("");
+const isAnswersUnlocked = ref(false);
+const passwordInput = ref<HTMLInputElement | null>(null);
+
+// Constants
+const ANSWERS_PASSWORD = "1861";
 
 // Methods
 const handleAnswer = (answerIndex: number) => {
@@ -183,6 +306,31 @@ const confirmRestart = () => {
   quizStore.resetQuiz();
   showRestartDialog.value = false;
 };
+
+const verifyPassword = () => {
+  if (passwordValue.value === ANSWERS_PASSWORD) {
+    isAnswersUnlocked.value = true;
+    passwordError.value = "";
+  } else {
+    passwordError.value = "Mot de passe incorrect";
+    passwordValue.value = "";
+  }
+};
+
+const closeAnswersDialog = () => {
+  showAnswersDialog.value = false;
+  passwordValue.value = "";
+  passwordError.value = "";
+  isAnswersUnlocked.value = false;
+};
+
+// Watch for answers dialog opening to focus password input
+watch(showAnswersDialog, async (newValue) => {
+  if (newValue && !isAnswersUnlocked.value) {
+    await nextTick();
+    passwordInput.value?.focus();
+  }
+});
 
 const shareQuiz = async () => {
   if (isSharing.value) return;
