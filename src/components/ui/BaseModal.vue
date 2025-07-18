@@ -96,7 +96,7 @@ interface Props {
 }
 
 const props = withDefaults(defineProps<Props>(), {
-  size: "md",
+  size: "lg",
   position: "center",
   closable: true,
   closeOnOverlay: true,
@@ -106,7 +106,7 @@ const props = withDefaults(defineProps<Props>(), {
   backdrop: "blur",
   animation: "scale",
   fullscreenOnMobile: true,
-  mobileSize: "full",
+  mobileSize: 95,
   closeLabel: "Fermer",
 });
 
@@ -143,11 +143,11 @@ const descriptionId = computed(
 
 // Size configurations
 const sizeConfigs = {
-  sm: { maxWidth: "max-w-md", padding: "p-4 mobile:p-6" },
-  md: { maxWidth: "max-w-lg", padding: "p-6 mobile:p-8" },
-  lg: { maxWidth: "max-w-2xl", padding: "p-6 mobile:p-8" },
-  xl: { maxWidth: "max-w-4xl", padding: "p-8 mobile:p-10" },
-  full: { maxWidth: "max-w-none", padding: "p-6 mobile:p-8" },
+  sm: { maxWidth: "max-w-md", padding: "p-2 mobile:p-3" },
+  md: { maxWidth: "max-w-lg", padding: "p-3 mobile:p-4" },
+  lg: { maxWidth: "max-w-2xl", padding: "p-3 mobile:p-4" },
+  xl: { maxWidth: "max-w-4xl", padding: "p-4 mobile:p-5" },
+  full: { maxWidth: "max-w-none", padding: "p-3 mobile:p-4" },
 };
 
 // Computed Classes
@@ -159,8 +159,8 @@ const overlayClasses = computed(() => {
     // Z-index using UnoCSS
     `z-${props.zIndex}`,
 
-    // Padding for mobile
-    "p-4 mobile:p-6",
+    // Padding for mobile - reduced for better space utilization
+    "p-2 mobile:p-3",
 
     // Backdrop styles
     props.backdrop === "blur"
@@ -214,12 +214,12 @@ const modalClasses = computed(() => {
     // Animation transform origin
     "transform-gpu",
 
-    // Mobile optimizations
+    // Mobile optimizations - reduced margins
     isMobile && props.mobileSize !== "full"
-      ? "mx-2"
+      ? "mx-1"
       : isMobile
-      ? "mx-2"
-      : "mx-4",
+      ? "mx-1"
+      : "mx-2",
 
     // Accessibility
     "focus:outline-none focus:ring-2 focus:ring-brand-1 focus:ring-offset-2",

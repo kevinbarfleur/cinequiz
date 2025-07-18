@@ -168,12 +168,12 @@
           {{ passwordError }}
         </p>
       </div>
-      <div v-else class="max-h-96 overflow-y-auto">
-        <div class="space-y-4">
+      <div v-else class="flex-1 overflow-y-auto p-2">
+        <div class="space-y-2">
           <div
             v-for="(question, index) in quizStore.state.questions"
             :key="question.id"
-            class="border border-divider rounded-lg p-3"
+            class="border border-divider rounded-lg p-2"
           >
             <div class="flex items-start gap-3">
               <div class="text-brand-1 font-medium text-sm">
@@ -477,4 +477,6 @@ onMounted(async () => {
     var(--color-bg-soft) 100%
   );
 }
+
+/* Quiz-specific modal optimizations are now handled globally in BaseModal.vue */
 </style>
