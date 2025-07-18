@@ -181,6 +181,21 @@
             </BaseButton>
           </div>
 
+          <!-- Custom Generation Button -->
+          <div class="text-center my-4">
+            <BaseButton
+              variant="outline"
+              size="md"
+              class="btn-modal"
+              @click="showCustomGeneration = true"
+            >
+              <span class="flex items-center gap-2">
+                <div class="i-carbon-settings text-lg"></div>
+                <span>Génération personnalisée</span>
+              </span>
+            </BaseButton>
+          </div>
+
           <div class="custom-block-tip">
             <strong>Quiz par Défaut :</strong> Utilisez notre collection de
             questions sur le cinéma.
@@ -293,6 +308,77 @@
         </div>
       </template>
     </BaseModal>
+
+    <!-- Custom Generation Modal -->
+    <BaseModal
+      v-model:isVisible="showCustomGeneration"
+      title="Génération personnalisée"
+      size="md"
+      :close-on-overlay="true"
+      :close-on-escape="true"
+      backdrop="blur"
+      animation="scale"
+      mobile-size="large"
+    >
+      <template #default>
+        <div class="space-responsive">
+          <div class="custom-block-info">
+            <strong>Génération personnalisée :</strong> Définissez vos thèmes et
+            la difficulté pour générer des questions sur mesure.
+          </div>
+
+          <div class="mt-4">
+            <label class="block text-sm font-medium text-text-1 mb-2">
+              Thèmes / Tags (séparés par des virgules)
+            </label>
+            <input
+              v-model="customTags"
+              type="text"
+              class="w-full p-3 border border-divider rounded-lg bg-bg text-text-1 focus:ring-2 focus:ring-brand-1 focus:border-brand-1 transition-colors"
+              placeholder="Ex: action, Marvel, années 90, thriller..."
+            />
+          </div>
+
+          <div class="mt-4">
+            <label class="block text-sm font-medium text-text-1 mb-2">
+              Niveau de difficulté
+            </label>
+            <select
+              v-model="customDifficulty"
+              class="w-full p-3 border border-divider rounded-lg bg-bg text-text-1 focus:ring-2 focus:ring-brand-1 focus:border-brand-1 transition-colors"
+            >
+              <option value="simple">Simple</option>
+              <option value="moyen">Moyen</option>
+              <option value="difficile">Difficile</option>
+              <option value="tres-difficile">Très difficile</option>
+            </select>
+          </div>
+
+          <div class="btn-group-end mt-6">
+            <BaseButton
+              variant="outline"
+              size="md"
+              class="btn-modal"
+              @click="showCustomGeneration = false"
+            >
+              Annuler
+            </BaseButton>
+            <BaseButton
+              variant="primary"
+              size="md"
+              class="btn-modal"
+              @click="openCustomChatGPT"
+              :disabled="!customTags.trim()"
+            >
+              <span class="flex items-center gap-2">
+                <div class="i-carbon-chat text-lg"></div>
+                Générer avec ChatGPT
+              </span>
+            </BaseButton>
+          </div>
+        </div>
+      </template>
+    </BaseModal>
   </div>
 </template>
 
@@ -313,10 +399,13 @@ const quizStore = useQuizStore();
 const isLoaded = ref(false);
 const showInstructions = ref(false);
 const showManualImport = ref(false);
+const showCustomGeneration = ref(false);
 const isImporting = ref(false);
 const importMessage = ref("");
 const importSuccess = ref(false);
 const manualJsonInput = ref("");
+const customTags = ref("");
+const customDifficulty = ref("moyen");
 
 // Quiz categories
 const quizCategories = QUIZ_CATEGORIES;
@@ -327,7 +416,7 @@ const chatGptUrl = computed(() => {
 
 {
   "metadata": {
-    "title": "Soirée CinéQuiz", 
+    "title": "Soirée CinéQuiz",
     "version": "1.0",
     "totalQuestions": 10,
     "categories": ["Romance", "Comédie", "Drame", "Acteurs"],
@@ -350,6 +439,45 @@ const chatGptUrl = computed(() => {
     prompt
   )}`;
 });
+
+const openCustomChatGPT = () => {
+  const tags = customTags.value.trim();
+  const difficulty = customDifficulty.value;
+
+  const prompt = `Génère un JSON pour un quiz cinéma personnalisé. Format obligatoire avec title "Soirée CinéQuiz" et au moins 10 questions.
+
+Thèmes souhaités: ${tags}
+Niveau de difficulté: ${difficulty}
+
+{
+  "metadata": {
+    "title": "Soirée CinéQuiz",
+    "version": "1.0",
+    "totalQuestions": 10,
+    "categories": ["Thèmes 1", "Thèmes 2", "Thèmes 3", "Thèmes 4"],
+    "description": "Quiz cinéma - ${tags} - ${difficulty}"
+  },
+  "questions": [
+    {
+      "id": "q001",
+      "question": "Question example?",
+      "answers": ["A", "B", "C", "D"],
+      "correctAnswer": 0,
+      "category": "Thèmes",
+      "difficulty": "${difficulty}",
+      "explanation": "Explication"
+    }
+  ]
+}
+
+Assure-toi que toutes les questions correspondent aux thèmes demandés (${tags}) et au niveau de difficulté "${difficulty}".`;
+
+  const url = `https://chat.openai.com/?model=gpt-4o&q=${encodeURIComponent(
+    prompt
+  )}`;
+  window.open(url, "_blank", "noopener,noreferrer");
+  showCustomGeneration.value = false;
+};
 
 const startQuiz = async (category: QuizCategory) => {
   try {
