@@ -166,7 +166,7 @@
           {{ passwordError }}
         </p>
       </div>
-      <div v-else class="flex-1 overflow-y-auto p-2">
+      <div v-else>
         <div class="space-y-2">
           <div
             v-for="(question, index) in quizStore.state.questions"
