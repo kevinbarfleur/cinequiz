@@ -179,25 +179,6 @@
 
           <div class="grid-responsive grid-cols-1 mobile-lg:grid-cols-2">
             <div>
-              <h4 class="heading-4 mb-3">Format JSON</h4>
-              <p class="body-sm mb-2">Le fichier JSON doit contenir :</p>
-              <ul class="space-y-2 body-sm">
-                <li class="flex items-center gap-2">
-                  <div class="i-carbon-checkmark text-green-1"></div>
-                  Un objet avec une propriété "questions"
-                </li>
-                <li class="flex items-center gap-2">
-                  <div class="i-carbon-checkmark text-green-1"></div>
-                  Chaque question avec id, question, answers, correctAnswer
-                </li>
-                <li class="flex items-center gap-2">
-                  <div class="i-carbon-checkmark text-green-1"></div>
-                  Explication optionnelle pour chaque question
-                </li>
-              </ul>
-            </div>
-
-            <div>
               <h4 class="heading-4 mb-3">Fonctionnalités</h4>
               <ul class="space-y-2 body-sm">
                 <li class="flex items-center gap-2">
