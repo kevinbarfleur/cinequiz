@@ -1,0 +1,263 @@
+{
+  "metadata": {
+    "title": "Quiz Cinéma Soirée Filles",
+    "version": "1.0",
+    "totalQuestions": 18,
+    "categories": ["Romance", "Comédie", "Drame", "Acteurs", "Réalisateurs"],
+    "description": "Un quiz cinéma parfait pour animer une soirée entre filles avec des questions sur les films cultes et les stars du cinéma."
+  },
+  "questions": [
+    {
+      "id": "q001",
+      "question": "Dans quel film Julia Roberts dit-elle 'Big mistake. Big. Huge!' ?",
+      "answers": [
+        "Pretty Woman",
+        "Notting Hill", 
+        "My Best Friend's Wedding",
+        "Erin Brockovich"
+      ],
+      "correctAnswer": 0,
+      "category": "Romance",
+      "difficulty": "medium",
+      "explanation": "Cette réplique culte est prononcée dans Pretty Woman lors de la scène du shopping sur Rodeo Drive."
+    },
+    {
+      "id": "q002",
+      "question": "Qui a réalisé le film 'Titanic' ?",
+      "answers": [
+        "Steven Spielberg",
+        "James Cameron",
+        "Christopher Nolan",
+        "Martin Scorsese"
+      ],
+      "correctAnswer": 1,
+      "category": "Réalisateurs",
+      "difficulty": "easy",
+      "explanation": "James Cameron a réalisé Titanic en 1997, film qui a remporté 11 Oscars."
+    },
+    {
+      "id": "q003",
+      "question": "Dans 'Le Diable s'habille en Prada', comment s'appelle le personnage joué par Meryl Streep ?",
+      "answers": [
+        "Miranda Priestly",
+        "Anna Wintour",
+        "Victoria Beckham",
+        "Coco Chanel"
+      ],
+      "correctAnswer": 0,
+      "category": "Comédie",
+      "difficulty": "medium",
+      "explanation": "Miranda Priestly est le personnage iconique et redoutable joué par Meryl Streep, inspiré d'Anna Wintour."
+    },
+    {
+      "id": "q004",
+      "question": "Quel film a valu son premier Oscar à Leonardo DiCaprio ?",
+      "answers": [
+        "Titanic",
+        "The Wolf of Wall Street",
+        "The Revenant",
+        "Inception"
+      ],
+      "correctAnswer": 2,
+      "category": "Acteurs",
+      "difficulty": "medium",
+      "explanation": "Leonardo DiCaprio a enfin remporté l'Oscar du meilleur acteur en 2016 pour son rôle dans The Revenant."
+    },
+    {
+      "id": "q005",
+      "question": "Dans 'Mamma Mia!', les chansons sont de quel groupe ?",
+      "answers": [
+        "Queen",
+        "ABBA",
+        "The Beatles",
+        "Bee Gees"
+      ],
+      "correctAnswer": 1,
+      "category": "Comédie",
+      "difficulty": "easy",
+      "explanation": "Mamma Mia! est une comédie musicale basée sur les chansons du groupe suédois ABBA."
+    },
+    {
+      "id": "q006",
+      "question": "Qui joue Bridget Jones dans la saga du même nom ?",
+      "answers": [
+        "Kate Winslet",
+        "Emma Thompson",
+        "Renée Zellweger",
+        "Sandra Bullock"
+      ],
+      "correctAnswer": 2,
+      "category": "Romance",
+      "difficulty": "easy",
+      "explanation": "Renée Zellweger incarne parfaitement Bridget Jones dans cette saga romantique culte."
+    },
+    {
+      "id": "q007",
+      "question": "Dans 'Dirty Dancing', quelle est la phrase culte de Patrick Swayze ?",
+      "answers": [
+        "I'll be back",
+        "Nobody puts Baby in a corner",
+        "You can't handle the truth",
+        "Show me the money"
+      ],
+      "correctAnswer": 1,
+      "category": "Romance",
+      "difficulty": "easy",
+      "explanation": "Cette réplique iconique de Johnny Castle est devenue l'une des phrases les plus célèbres du cinéma romantique."
+    },
+    {
+      "id": "q008",
+      "question": "Quel film a lancé la carrière de Jennifer Lawrence ?",
+      "answers": [
+        "Hunger Games",
+        "Silver Linings Playbook",
+        "X-Men",
+        "American Hustle"
+      ],
+      "correctAnswer": 0,
+      "category": "Acteurs",
+      "difficulty": "medium",
+      "explanation": "Hunger Games en 2012 a propulsé Jennifer Lawrence au rang de star internationale."
+    },
+    {
+      "id": "q009",
+      "question": "Dans 'Sex and the City', qui joue Carrie Bradshaw ?",
+      "answers": [
+        "Kim Cattrall",
+        "Kristin Davis",
+        "Sarah Jessica Parker",
+        "Cynthia Nixon"
+      ],
+      "correctAnswer": 2,
+      "category": "Comédie",
+      "difficulty": "easy",
+      "explanation": "Sarah Jessica Parker incarne l'iconique Carrie Bradshaw, journaliste mode à New York."
+    },
+    {
+      "id": "q010",
+      "question": "Qui a réalisé 'Lost in Translation' ?",
+      "answers": [
+        "Sofia Coppola",
+        "Kathryn Bigelow",
+        "Greta Gerwig",
+        "Nancy Meyers"
+      ],
+      "correctAnswer": 0,
+      "category": "Réalisateurs",
+      "difficulty": "medium",
+      "explanation": "Sofia Coppola a réalisé ce film contemplatif en 2003, qui lui a valu l'Oscar du meilleur scénario original."
+    },
+    {
+      "id": "q011",
+      "question": "Dans 'Mean Girls', comment s'appelle le personnage principal ?",
+      "answers": [
+        "Regina George",
+        "Cady Heron",
+        "Gretchen Wieners",
+        "Karen Smith"
+      ],
+      "correctAnswer": 1,
+      "category": "Comédie",
+      "difficulty": "medium",
+      "explanation": "Cady Heron, jouée par Lindsay Lohan, est la nouvelle élève qui intègre le groupe des 'Plastics'."
+    },
+    {
+      "id": "q012",
+      "question": "Quel film de 2019 a remporté l'Oscar du meilleur film ?",
+      "answers": [
+        "1917",
+        "Joker",
+        "Parasite",
+        "Once Upon a Time in Hollywood"
+      ],
+      "correctAnswer": 2,
+      "category": "Drame",
+      "difficulty": "hard",
+      "explanation": "Parasite de Bong Joon-ho a fait l'histoire en devenant le premier film non-anglophone à remporter l'Oscar du meilleur film."
+    },
+    {
+      "id": "q013",
+      "question": "Dans 'La La Land', qui joue aux côtés de Ryan Gosling ?",
+      "answers": [
+        "Emma Stone",
+        "Emma Watson",
+        "Anne Hathaway",
+        "Scarlett Johansson"
+      ],
+      "correctAnswer": 0,
+      "category": "Romance",
+      "difficulty": "easy",
+      "explanation": "Emma Stone joue Mia, l'actrice en herbe qui tombe amoureuse du musicien Sebastian (Ryan Gosling)."
+    },
+    {
+      "id": "q014",
+      "question": "Qui a composé la musique de 'Amélie Poulain' ?",
+      "answers": [
+        "Hans Zimmer",
+        "Yann Tiersen",
+        "Thomas Newman",
+        "Alexandre Desplat"
+      ],
+      "correctAnswer": 1,
+      "category": "Drame",
+      "difficulty": "hard",
+      "explanation": "Yann Tiersen a composé cette bande sonore poétique et mélancolique qui accompagne parfaitement l'univers du film."
+    },
+    {
+      "id": "q015",
+      "question": "Dans 'Legally Blonde', quelle université intègre Elle Woods ?",
+      "answers": [
+        "Yale",
+        "Harvard",
+        "Stanford",
+        "Columbia"
+      ],
+      "correctAnswer": 1,
+      "category": "Comédie",
+      "difficulty": "medium",
+      "explanation": "Elle Woods intègre la prestigieuse école de droit de Harvard pour reconquérir son ex-petit ami."
+    },
+    {
+      "id": "q016",
+      "question": "Qui joue la Reine dans 'The Queen' (2006) ?",
+      "answers": [
+        "Judi Dench",
+        "Helen Mirren",
+        "Maggie Smith",
+        "Emma Thompson"
+      ],
+      "correctAnswer": 1,
+      "category": "Drame",
+      "difficulty": "medium",
+      "explanation": "Helen Mirren a remporté l'Oscar de la meilleure actrice pour son interprétation de la Reine Elizabeth II."
+    },
+    {
+      "id": "q017",
+      "question": "Dans 'Clueless', comment s'appelle l'héroïne ?",
+      "answers": [
+        "Cher Horowitz",
+        "Tai Frasier",
+        "Dionne Davenport",
+        "Amber Mariens"
+      ],
+      "correctAnswer": 0,
+      "category": "Comédie",
+      "difficulty": "easy",
+      "explanation": "Cher Horowitz, jouée par Alicia Silverstone, est l'adolescente privilégiée de Beverly Hills au cœur de cette comédie culte des années 90."
+    },
+    {
+      "id": "q018",
+      "question": "Quel film de Greta Gerwig a été nommé pour l'Oscar du meilleur film en 2018 ?",
+      "answers": [
+        "Frances Ha",
+        "Lady Bird",
+        "Little Women",
+        "Mistress America"
+      ],
+      "correctAnswer": 1,
+      "category": "Drame",
+      "difficulty": "hard",
+      "explanation": "Lady Bird, le premier film réalisé par Greta Gerwig, a été nommé dans 5 catégories aux Oscars 2018."
+    }
+  ]
+}
